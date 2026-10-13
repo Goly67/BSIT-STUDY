@@ -143,7 +143,7 @@ input[type=text],input[type=url]{font-size:16px}
   <figure id="polaroid"><div id="photoBox" class="ph">Class photo goes here</div><figcaption id="photoCap"></figcaption></figure>
   <div class="heroText">
     <div id="secName">PAG TUON MO BSIT-1A</div>
-    <p id="secSub">may ereklamo ka? PORPIS DAYUN DOL.</p>
+    <p id="secSub">may ereklamo ka? PORPIS RAY MAKATUBAG NIMO DOL.</p>
     <div id="heroTools">
       <button class="b" id="secEdit">Edit section text</button>
     </div>
@@ -344,16 +344,16 @@ async function findNumberedPhotos(){
 }
 onValue(ref(db,"config/section"),s=>{
   sec=s.val()||{};
-  $("secName").textContent=sec.name||"BSIT-1A";
-  $("secSub").textContent=sec.sub||"Our section's shared study corner.";
+  $("secName").textContent=sec.name||"MGA NAWNG SA BSIT-1A";
+  $("secSub").textContent=sec.sub||"may ekereklamo ka? PORPIS RAY MAKATUBAG NIMO DOL.";
   $("photoCap").textContent=sec.caption||"";
   if(photoElement)photoElement.alt="Class photo of "+(sec.name||"BSIT-1A");
 });
 const saveSec=d=>update(ref(db,"config/section"),d).then(()=>toast("Saved")).catch(e=>toast("Failed: "+e.code));
 findNumberedPhotos();
-$("secEdit").onclick=()=>{$("sName").value=sec.name||"BSIT-1A";$("sSub").value=sec.sub||"Our section's shared study corner.";$("sCap").value=sec.caption||"";$("secDlg").showModal()};
+$("secEdit").onclick=()=>{$("sName").value=sec.name||"MGA NAWNG SA BSIT-1A";$("sSub").value=sec.sub||"may ekereklamo ka? PORPIS RAY MAKATUBAG NIMO DOL.";$("sCap").value=sec.caption||"";$("secDlg").showModal()};
 $("sCancel").onclick=()=>$("secDlg").close();
-$("sSave").onclick=()=>{saveSec({name:$("sName").value.trim()||"BSIT-1A",sub:$("sSub").value.trim(),caption:$("sCap").value.trim()});$("secDlg").close()};
+$("sSave").onclick=()=>{saveSec({name:$("sName").value.trim()||"MGA NAWNG SA BSIT-1A",sub:$("sSub").value.trim(),caption:$("sCap").value.trim()});$("secDlg").close()};
 
 /* ---------- in-site viewer ---------- */
 function route(){
