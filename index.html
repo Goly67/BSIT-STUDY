@@ -213,8 +213,19 @@ const COLORS=["#ffe45c","#8fd3b6","#9ec5ff","#ffb4a2","#d4b8ff"];
 let items=[], isAdmin=false, editing=null, dragId=null, fxTimer=null, lastFx=0, viewerRequest=0;
 const viewerAccess=new Set();
 
+const ytId=u=>{try{const x=new URL(u);let id="";
+  if(x.hostname==="youtu.be")id=x.pathname.slice(1);
+  else if(/(^|\.)youtube\.com$/.test(x.hostname)){
+    if(x.pathname==="/watch")id=x.searchParams.get("v")||"";
+    else{const m=x.pathname.match(/^\/(?:embed|shorts|live)\/([\w-]{11})/);if(m)id=m[1]}
+  }
+  return /^[\w-]{11}$/.test(id)?id:""}catch{return ""}};
+const ytEmbed=id=>`https://www.youtube.com/embed/${id}?controls=0&disablekb=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&playsinline=1&autoplay=1&mute=1`;
+const isYt=u=>{try{const x=new URL(u);return x.hostname==="www.youtube.com"&&x.pathname.startsWith("/embed/")}catch{return false}};
+
 const toast=(t)=>{const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",2600)};
 const fixUrl=u=>{u=u.trim();if(!/^https?:\/\//i.test(u))u="https://"+u;
+const y=ytId(u);if(y)return ytEmbed(y);
   u=u.replace(/(docs\.google\.com\/(?:document|presentation|spreadsheets)\/d\/[^/]+)\/(?:edit|view)[^ ]*/,"$1/preview")
      .replace(/(drive\.google\.com\/file\/d\/[^/]+)\/view[^ ]*/,"$1/preview");return u};
 const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch{return ""}};
@@ -374,9 +385,10 @@ function route(){
   v.dataset.pending=it.id;
   $("vtitle").textContent=it.title;
   document.body.classList.add("locked");
-  makeTicketedUrl(it).then(url=>{
+  (isYt(it.url)?Promise.resolve(it.url):makeTicketedUrl(it)).then(url=>{
     if(request!==viewerRequest||location.hash!=="#/m/"+it.id)return;
     v.dataset.pending="";v.dataset.id=it.id;$("frame").src=url;v.classList.add("open");
+    $("frame").referrerPolicy=isYt(url)?"strict-origin-when-cross-origin":"no-referrer";
   }).catch(error=>{
     if(request!==viewerRequest)return;
     v.dataset.pending="";v.classList.remove("open");document.body.classList.remove("locked");
