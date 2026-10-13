@@ -71,7 +71,6 @@ footer button{background:none;border:0;color:var(--muted);text-decoration:underl
 #viewer.open{display:flex}
 #vbar{display:flex;gap:10px;align-items:center;padding:8px 12px;background:var(--ink);color:#fff}
 #vbar h3{margin:0;font-size:1rem;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#vbar a{color:var(--hl);font-size:.8rem;white-space:nowrap}
 #vbar button.b{border-color:#fff;background:transparent;color:#fff}
 #vnote{display:none;padding:6px 12px;background:var(--hl);font-size:.85rem}
 #frame{flex:1;width:100%;border:0;background:#fff}
@@ -118,7 +117,6 @@ input[type=text],input[type=url]{font-size:16px}
   button.b{min-height:40px;padding:8px 12px}
   .tools .b{flex:1 1 70px}
   #vbar{gap:6px}
-  #vbar a{font-size:.75rem}
   #vnote{font-size:.8rem}
   dialog{padding:18px}
   #inBtn{padding:14px 24px}
@@ -156,7 +154,7 @@ input[type=text],input[type=url]{font-size:16px}
 </div></footer>
 
 <div id="viewer">
-  <div id="vbar"><button class="b" id="backBtn">Back</button><h3 id="vtitle"></h3><a id="vopen" target="_blank" rel="noopener">Open in new tab</a></div>
+  <div id="vbar"><button class="b" id="backBtn">Back</button><h3 id="vtitle"></h3></div>
   <div id="vnote">Page blank? Some sites don't allow being shown inside other sites. Try a Google Drive/Docs share link instead.</div>
   <iframe id="frame" allow="fullscreen" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation"></iframe>
 </div>
@@ -375,7 +373,7 @@ function route(){
   viewerAccess.delete(it.id);
   const request=++viewerRequest;
   v.dataset.pending=it.id;
-  $("vtitle").textContent=it.title;$("vopen").href=it.url;$("vnote").style.display="none";
+  $("vtitle").textContent=it.title;$("vnote").style.display="none";
   document.body.classList.add("locked");
   makeTicketedUrl(it).then(url=>{
     if(request!==viewerRequest||location.hash!=="#/m/"+it.id)return;
@@ -409,16 +407,6 @@ async function makeTicketedUrl(it){
 }
 window.addEventListener("hashchange",route);
 $("backBtn").onclick=()=>{location.hash="#/"};
-$("vopen").onclick=async e=>{
-  e.preventDefault();
-  const it=items.find(item=>item.id===$("viewer").dataset.id);
-  if(!it)return;
-  const tab=window.open("about:blank","_blank");
-  if(!tab)return toast("Allow pop-ups to open this material in a new tab");
-  try{tab.location.replace(await makeTicketedUrl(it))}
-  catch(error){tab.close();toast("Couldn't create a viewing ticket: "+(error.message||error.code||"unknown error"))}
-};
-
 /* ---------- memes ---------- */
 $("memeBtn").onclick=()=>$("memeDlg").showModal();
 $("mClose").onclick=()=>$("memeDlg").close();
