@@ -205,7 +205,7 @@ const ADMIN_EMAILS = ["forestparty223@gmail.com"];
 document.getElementById("siteTitle").textContent = "PAG TUON MO BSIT-1A"; // section here
 
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getAuth,GoogleAuthProvider,signInWithPopup,signInAnonymously,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {getDatabase,ref,push,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getDatabase(app);
@@ -387,13 +387,9 @@ function route(){
   });
 }
 async function makeTicketedUrl(it){
-  if(!auth.currentUser)await signInAnonymously(auth);
   const response=await fetch("/api/createViewerTicket",{
     method:"POST",
-    headers:{
-      "Authorization":`Bearer ${await auth.currentUser.getIdToken()}`,
-      "Content-Type":"application/json"
-    },
+    headers:{"Content-Type":"application/json"},
     body:JSON.stringify({materialId:it.id})
   });
   const result=await response.json().catch(()=>({}));
