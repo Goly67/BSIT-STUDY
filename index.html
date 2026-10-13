@@ -344,16 +344,16 @@ async function findNumberedPhotos(){
 }
 onValue(ref(db,"config/section"),s=>{
   sec=s.val()||{};
-  $("secName").textContent=sec.name||"MGA NAWNG SA BSIT-1A";
+  $("secName").textContent=sec.name||"MGA NAWNG";
   $("secSub").textContent=sec.sub||"may ekereklamo ka? PORPIS RAY MAKATUBAG NIMO DOL.";
   $("photoCap").textContent=sec.caption||"";
   if(photoElement)photoElement.alt="Class photo of "+(sec.name||"BSIT-1A");
 });
 const saveSec=d=>update(ref(db,"config/section"),d).then(()=>toast("Saved")).catch(e=>toast("Failed: "+e.code));
 findNumberedPhotos();
-$("secEdit").onclick=()=>{$("sName").value=sec.name||"MGA NAWNG SA BSIT-1A";$("sSub").value=sec.sub||"may ekereklamo ka? PORPIS RAY MAKATUBAG NIMO DOL.";$("sCap").value=sec.caption||"";$("secDlg").showModal()};
+$("secEdit").onclick=()=>{$("sName").value=sec.name||"MGA NAWNG";$("sSub").value=sec.sub||"may ekereklamo ka? PORPIS RAY MAKATUBAG NIMO DOL.";$("sCap").value=sec.caption||"";$("secDlg").showModal()};
 $("sCancel").onclick=()=>$("secDlg").close();
-$("sSave").onclick=()=>{saveSec({name:$("sName").value.trim()||"MGA NAWNG SA BSIT-1A",sub:$("sSub").value.trim(),caption:$("sCap").value.trim()});$("secDlg").close()};
+$("sSave").onclick=()=>{saveSec({name:$("sName").value.trim()||"MGA NAWNG",sub:$("sSub").value.trim(),caption:$("sCap").value.trim()});$("secDlg").close()};
 
 /* ---------- in-site viewer ---------- */
 function route(){
