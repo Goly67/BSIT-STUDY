@@ -209,10 +209,8 @@ document.getElementById("siteTitle").textContent = "PAG TUON MO BSIT-1A"; // sec
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,GoogleAuthProvider,signInWithPopup,signInAnonymously,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {getDatabase,ref,push,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-import {getFunctions,httpsCallable} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js";
 
-const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getDatabase(app), functions=getFunctions(app,"us-central1");
-const createViewerTicket=httpsCallable(functions,"createViewerTicket");
+const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getDatabase(app);
 const $=id=>document.getElementById(id);
 const COLORS=["#ffe45c","#8fd3b6","#9ec5ff","#ffb4a2","#d4b8ff"];
 let items=[], isAdmin=false, editing=null, dragId=null, fxTimer=null, lastFx=0, viewerRequest=0;
@@ -392,9 +390,20 @@ function route(){
 }
 async function makeTicketedUrl(it){
   if(!auth.currentUser)await signInAnonymously(auth);
-  const result=await createViewerTicket({materialId:it.id});
+  const response=await fetch("/api/createViewerTicket",{
+    method:"POST",
+    headers:{
+      "Authorization":`Bearer ${await auth.currentUser.getIdToken()}`,
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({materialId:it.id})
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok||typeof result.ticket!=="string"){
+    throw new Error(result.error||`Ticket service returned HTTP ${response.status}`);
+  }
   const url=new URL(it.url);
-  url.searchParams.set("bsit_ticket",result.data.ticket);
+  url.searchParams.set("bsit_ticket",result.ticket);
   url.searchParams.set("bsit_material",it.id);
   return url.href;
 }
