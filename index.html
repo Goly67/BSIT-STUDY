@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Class Study Materials</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#eef2ea;--ink:#16253b;--muted:#5b6b80;--hl:#ffe45c;--red:#d64545;--line:#c9d4c3}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);background-color:var(--paper);
+ background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:28px 28px;min-height:100vh}
+body.locked{overflow:hidden}
+header{padding:48px 20px 20px;max-width:1040px;margin:0 auto}
+h1{font-size:clamp(2.2rem,7vw,4.2rem);line-height:1;margin:0 0 10px;font-weight:800;letter-spacing:-.03em}
+h1 span{background:linear-gradient(transparent 58%,var(--hl) 58%)}
+header p{margin:0;color:var(--muted);max-width:52ch}
+main{max-width:1040px;margin:0 auto;padding:12px 20px 80px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 18px;padding:10px 12px;background:var(--ink);color:#fff;border-radius:10px}
+.bar b{margin-right:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.card{position:relative;background:#fff;border:2px solid var(--ink);border-radius:4px 14px 14px 4px;padding:20px 18px 16px 34px;cursor:pointer;min-height:140px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:4px 4px 0 var(--ink);transition:transform .12s,box-shadow .12s;text-align:left;font:inherit;color:inherit}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:16px;background:var(--c,#ffe45c);border-right:2px solid var(--ink)}
+.card:hover,.card:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);outline:none}
+.card h2{margin:0;font-size:1.35rem;line-height:1.15;word-break:break-word}
+.card small{color:var(--muted);margin-top:14px;display:block}
+.card.drag{opacity:.4}
+.tools{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+button.b{font:inherit;font-size:.85rem;border:2px solid var(--ink);background:#fff;color:var(--ink);border-radius:8px;padding:5px 10px;cursor:pointer}
+button.b:hover{background:var(--hl)}
+button.b.red{border-color:var(--red);color:var(--red)}
+button.b.red:hover{background:var(--red);color:#fff}
+.bar button.b{border-color:#fff;background:transparent;color:#fff}.bar button.b:hover{background:var(--hl);color:var(--ink)}
+.empty{padding:40px;border:2px dashed var(--ink);border-radius:12px;text-align:center;background:#fff}
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding-bottom:40px}
+footer button{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit}
+/* hero: class photo + section */
+#hero{max-width:1040px;margin:0 auto;padding:8px 20px 28px;display:flex;flex-direction:column;gap:30px;align-items:center;text-align:center}
+#polaroid{position:relative;margin:0;background:#fff;padding:12px 12px 8px;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);width:min(760px,100%)}
+#polaroid::before{content:"";position:absolute;top:-14px;left:50%;width:110px;height:28px;margin-left:-55px;background:rgba(255,228,92,.85);border:1px solid rgba(22,37,59,.25);transform:rotate(3deg)}
+#photoBox{aspect-ratio:16/9;background:#dfe7da;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);overflow:hidden}
+#photoBox img{width:100%;height:100%;object-fit:cover;display:block}
+#photoBox img.fading{opacity:0}
+#photoBox img{transition:opacity .8s ease}
+#photoBox.ph{border:2px dashed var(--muted);margin:0;padding:12px}
+#photoCap{padding:10px 4px 4px;font-weight:600;text-align:center;min-height:1.6em}
+.heroText{width:100%;display:flex;flex-direction:column;align-items:center}
+#secName{font-size:clamp(3.4rem,13vw,7rem);font-weight:800;line-height:.9;letter-spacing:-.05em;display:inline-block;padding:0 .1em;background:var(--ink);color:var(--hl);transform:rotate(1.5deg);border-radius:6px}
+#secSub{margin:18px 0 0;color:var(--muted);font-size:1.1rem}
+#heroTools{display:none;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+/* admin sign in */
+@property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes spin{to{--a:360deg}}
+@keyframes shine{0%{left:-60%}60%,100%{left:130%}}
+#inBtn{position:relative;display:inline-flex;align-items:center;gap:10px;padding:15px 28px;border:0;border-radius:999px;background:transparent;color:#fff;font:800 1.05rem 'Bricolage Grotesque',sans-serif;letter-spacing:.01em;cursor:pointer;text-decoration:none;isolation:isolate;box-shadow:0 0 26px rgba(255,228,92,.5),0 0 60px rgba(158,197,255,.35);transition:transform .15s,box-shadow .2s}
+#inBtn::before{content:"";position:absolute;inset:-3px;border-radius:inherit;background:conic-gradient(from var(--a),#ffe45c,#8fd3b6,#9ec5ff,#d4b8ff,#ffb4a2,#ffe45c);z-index:-2;animation:spin 3s linear infinite}
+#inBtn::after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--ink);z-index:-1}
+#inBtn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 0 36px rgba(255,228,92,.85),0 0 90px rgba(158,197,255,.6)}
+#inBtn:hover::before{animation-duration:1s}
+#inBtn:active{transform:scale(.97)}
+#inBtn:focus-visible{outline:3px solid var(--hl);outline-offset:6px}
+#inBtn svg{width:22px;height:22px;transition:transform .3s}
+#inBtn:hover svg{transform:rotate(-25deg) scale(1.15)}
+#inBtn i{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none}
+#inBtn i::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:shine 3.2s ease-in-out infinite}
+#adminWrap{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:10px}
+@media (prefers-reduced-motion:reduce){#inBtn::before,#inBtn i::before{animation:none}}
+/* viewer */
+#viewer{position:fixed;inset:0;background:var(--paper);z-index:50;display:none;flex-direction:column}
+#viewer.open{display:flex}
+#vbar{display:flex;gap:10px;align-items:center;padding:8px 12px;background:var(--ink);color:#fff}
+#vbar h3{margin:0;font-size:1rem;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#vbar a{color:var(--hl);font-size:.8rem;white-space:nowrap}
+#vbar button.b{border-color:#fff;background:transparent;color:#fff}
+#vnote{display:none;padding:6px 12px;background:var(--hl);font-size:.85rem}
+#frame{flex:1;width:100%;border:0;background:#fff}
+/* dialogs */
+dialog{border:2px solid var(--ink);border-radius:14px;padding:22px;width:min(440px,92vw);font-family:inherit;color:var(--ink)}
+dialog::backdrop{background:rgba(22,37,59,.55)}
+dialog h3{margin:0 0 14px}
+label{display:block;font-size:.85rem;margin:10px 0 4px}
+input[type=text],input[type=url],input[type=range]{width:100%;font:inherit;padding:9px;border:2px solid var(--ink);border-radius:8px}
+input[type=range]{padding:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;z-index:10001;display:none}
+/* effects */
+#fx{position:fixed;inset:0;z-index:9999;display:none}
+#fx.freeze{display:block;cursor:wait}
+#fx.bsod{display:block;background:#0b64c0;color:#fff;padding:8vw;cursor:none;font-family:system-ui,sans-serif}
+#fx.bsod .s{font-size:min(20vw,140px);line-height:1}
+#fx.bsod p{font-size:min(4.5vw,26px);max-width:34ch}
+#fx.bsod small{position:absolute;bottom:14px;left:8vw;opacity:.7}
+#fx canvas{width:100%;height:100%;display:block;pointer-events:none}
+#fx.confetti{display:block;pointer-events:none}
+body.shake main,body.shake header{animation:shake .15s infinite}
+@keyframes shake{0%{transform:translate(4px,2px)}25%{transform:translate(-4px,-3px)}50%{transform:translate(3px,-2px)}75%{transform:translate(-3px,3px)}100%{transform:translate(4px,2px)}}
+@media (prefers-reduced-motion:reduce){.card{transition:none}}
+@media (prefers-reduced-motion:reduce){#photoBox img{transition:none}}
+input[type=text],input[type=url]{font-size:16px}
+#viewer{height:100vh;height:100dvh}
+#vbar{padding-top:calc(8px + env(safe-area-inset-top))}
+#toast{bottom:calc(24px + env(safe-area-inset-bottom));max-width:90vw;text-align:center}
+@media (max-width:640px){
+  header{padding:28px 16px 12px}
+  #hero{padding:4px 16px 22px;gap:26px;justify-content:center;text-align:center}
+  #polaroid{box-shadow:4px 4px 0 var(--ink)}
+  .heroText{min-width:0;flex-basis:100%}
+  #secSub{font-size:1rem}
+  #heroTools{justify-content:center}
+  #heroTools .b{flex:1 1 140px}
+  main{padding:8px 16px 60px}
+  .grid{grid-template-columns:1fr;gap:16px}
+  .card{min-height:110px}
+  .bar{position:sticky;top:0;z-index:5;gap:6px}
+  .bar b{flex-basis:100%}
+  .bar .b{flex:1}
+  button.b{min-height:40px;padding:8px 12px}
+  .tools .b{flex:1 1 70px}
+  #vbar{gap:6px}
+  #vbar a{font-size:.75rem}
+  #vnote{font-size:.8rem}
+  dialog{padding:18px}
+  #inBtn{padding:14px 24px}
+  footer{padding:0 16px 32px}
+}
+@media (max-width:360px){#vbar a{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <h1><span id="siteTitle">Study Materials</span></h1>
+  <p id="siteSub">Tap a card to open the reviewer right here. Nothing leaves this site.</p>
+</header>
+<main>
+  <div id="adminBar" class="bar" style="display:none">
+    <b>Admin mode</b>
+    <button class="b" id="addBtn">+ Add card</button>
+    <button class="b" id="memeBtn">Memes</button>
+    <button class="b" id="outBtn">Sign out</button>
+  </div>
+  <div id="grid" class="grid"></div>
+</main>
+<section id="hero">
+  <figure id="polaroid"><div id="photoBox" class="ph">Class photo goes here</div><figcaption id="photoCap"></figcaption></figure>
+  <div class="heroText">
+    <div id="secName">PAG TUON MO BSIT-1A</div>
+    <p id="secSub">Our section's shared study corner.</p>
+    <div id="heroTools">
+      <button class="b" id="secEdit">Edit section text</button>
+    </div>
+  </div>
+</section>
+<footer><div id="adminWrap"><span id="who"></span>
+  <button id="inBtn" type="button"><i></i><svg viewBox="0 0 24 24" fill="none" stroke="#ffe45c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3v6c0 5-3.4 9.3-8 11-4.6-1.7-8-6-8-11V5z"/><path d="M9 12l2 2 4-4"/></svg>Admin access</button>
+</div></footer>
+
+<div id="viewer">
+  <div id="vbar"><button class="b" id="backBtn">Back</button><h3 id="vtitle"></h3><a id="vopen" target="_blank" rel="noopener">Open in new tab</a></div>
+  <div id="vnote">Page blank? Some sites don't allow being shown inside other sites. Try a Google Drive/Docs share link instead.</div>
+  <iframe id="frame" allow="fullscreen" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation"></iframe>
+</div>
+
+<dialog id="cardDlg">
+  <h3 id="cardDlgTitle">Add card</h3>
+  <label for="cTitle">Name</label><input id="cTitle" type="text" maxlength="80">
+  <label for="cUrl">Link</label><input id="cUrl" type="url" placeholder="https://tinyurl.com/...">
+  <div class="row"><button class="b" id="cSave">Save</button><button class="b" id="cCancel">Cancel</button></div>
+</dialog>
+
+<dialog id="secDlg">
+  <h3>Edit section</h3>
+  <label for="sName">Section name</label><input id="sName" type="text" maxlength="30">
+  <label for="sSub">Tagline</label><input id="sSub" type="text" maxlength="120">
+  <label for="sCap">Photo caption</label><input id="sCap" type="text" maxlength="80" placeholder="e.g. Our first day, 2026">
+  <div class="row"><button class="b" id="sSave">Save</button><button class="b" id="sCancel">Cancel</button></div>
+</dialog>
+
+<dialog id="memeDlg">
+  <h3>Memes (sent to everyone viewing)</h3>
+  <label for="mSec">Duration: <span id="mSecN">10</span> seconds</label>
+  <input id="mSec" type="range" min="3" max="30" value="10">
+  <div class="row">
+    <button class="b" data-fx="freeze">Freeze screen</button>
+    <button class="b" data-fx="bsod">Fake blue screen</button>
+    <button class="b" data-fx="confetti">Confetti</button>
+    <button class="b" data-fx="shake">Earthquake</button>
+  </div>
+  <div class="row"><button class="b red" id="mStop">Stop all now</button><button class="b" id="mClose">Close</button></div>
+  <p style="font-size:.8rem;color:#5b6b80">You won't be affected. Effects end by themselves.</p>
+</dialog>
+
+<div id="fx"></div><div id="toast"></div>
+
+<script type="module">
+const firebaseConfig = {
+  apiKey: "AIzaSyB-_iDKx45q43iOfPonZRgKn74LgfpCdG8",
+  authDomain: "bsit-study.firebaseapp.com",
+  databaseURL: "https://bsit-study-default-rtdb.firebaseio.com",
+  projectId: "bsit-study",
+  storageBucket: "bsit-study.firebasestorage.app",
+  messagingSenderId: "756291046363",
+  appId: "1:756291046363:web:8022fd1e9f4b5b57f8f5fe",
+  measurementId: "G-3Q23SJE0D0"
+};
+const ADMIN_EMAILS = ["forestparty223@gmail.com"];
+document.getElementById("siteTitle").textContent = "PAG TUON MO BSIT-1A"; // section here
+
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,GoogleAuthProvider,signInWithPopup,signInAnonymously,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getDatabase,ref,push,set,update,remove,onValue} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import {getFunctions,httpsCallable} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js";
+
+const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getDatabase(app), functions=getFunctions(app,"us-central1");
+const createViewerTicket=httpsCallable(functions,"createViewerTicket");
+const $=id=>document.getElementById(id);
+const COLORS=["#ffe45c","#8fd3b6","#9ec5ff","#ffb4a2","#d4b8ff"];
+let items=[], isAdmin=false, editing=null, dragId=null, fxTimer=null, lastFx=0, viewerRequest=0;
+const viewerAccess=new Set();
+
+const toast=(t)=>{const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",2600)};
+const fixUrl=u=>{u=u.trim();if(!/^https?:\/\//i.test(u))u="https://"+u;
+  u=u.replace(/(docs\.google\.com\/(?:document|presentation|spreadsheets)\/d\/[^/]+)\/(?:edit|view)[^ ]*/,"$1/preview")
+     .replace(/(drive\.google\.com\/file\/d\/[^/]+)\/view[^ ]*/,"$1/preview");return u};
+const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch{return ""}};
+
+/* ---------- auth ---------- */
+$("inBtn").onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).catch(e=>toast("Sign-in failed: "+e.code));
+$("outBtn").onclick=()=>signOut(auth);
+onAuthStateChanged(auth,u=>{
+  isAdmin=!!(u&&u.emailVerified&&ADMIN_EMAILS.includes(u.email));
+  $("adminBar").style.display=isAdmin?"flex":"none";
+  $("inBtn").style.display=isAdmin?"none":"inline-flex";
+  $("heroTools").style.display=isAdmin?"flex":"none";
+  $("who").textContent=u&&!u.isAnonymous&&!isAdmin?`Signed in as ${u.email} (no admin access) `:"";
+  if(u&&!u.isAnonymous&&!isAdmin){const b=document.createElement("button");b.textContent="Sign out";b.onclick=()=>signOut(auth);$("who").appendChild(b)}
+  render();
+});
+
+/* ---------- cards ---------- */
+onValue(ref(db,"materials"),s=>{
+  const materials=s.val()||{};
+  items=Object.entries(materials).map(([id,data])=>({id,...data}))
+    .sort((a,b)=>(a.order??0)-(b.order??0));
+  render();route();
+},e=>toast("Can't load cards: "+e.code));
+
+function render(){
+  const g=$("grid");g.textContent="";
+  if(!items.length){
+    const d=document.createElement("div");d.className="empty";
+    d.textContent=isAdmin?"No cards yet. ":"No materials posted yet. Check back soon.";
+    if(isAdmin){const b=document.createElement("button");b.className="b";b.textContent="Add your 3 starter cards";b.onclick=seed;d.appendChild(b)}
+    g.appendChild(d);return;
+  }
+  items.forEach((it,i)=>{
+    const c=document.createElement("div");c.className="card";c.tabIndex=0;c.setAttribute("role","button");
+    c.style.setProperty("--c",COLORS[(it.color??i)%COLORS.length]);
+    const h=document.createElement("h2");h.textContent=it.title;
+    const s=document.createElement("small");s.textContent="Opens inside this site";
+    const top=document.createElement("div");top.append(h,s);c.appendChild(top);
+    const open=()=>{viewerAccess.add(it.id);location.hash="#/m/"+it.id;if(location.hash==="#/m/"+it.id)route()};
+    c.onclick=open;
+    c.onkeydown=e=>{if(e.key==="Enter"&&e.target===c)open()};
+    if(isAdmin){
+      c.draggable=true;
+      c.ondragstart=()=>{dragId=it.id;c.classList.add("drag")};
+      c.ondragend=()=>c.classList.remove("drag");
+      c.ondragover=e=>e.preventDefault();
+      c.ondrop=e=>{e.preventDefault();const from=items.findIndex(x=>x.id===dragId);if(from>-1&&from!==i)move(from,i)};
+      const t=document.createElement("div");t.className="tools";
+      const mk=(l,f,cls="")=>{const b=document.createElement("button");b.className="b "+cls;b.textContent=l;b.onclick=e=>{e.stopPropagation();f()};t.appendChild(b)};
+      mk("Left",()=>i>0&&move(i,i-1));mk("Right",()=>i<items.length-1&&move(i,i+1));
+      mk("Edit",()=>openEdit(it));
+      mk("Delete",async()=>{if(confirm(`Delete "${it.title}"?`))await remove(ref(db,`materials/${it.id}`)).catch(err=>toast("Failed: "+err.code))},"red");
+      c.appendChild(t);
+    }
+    g.appendChild(c);
+  });
+}
+async function move(from,to){
+  const a=[...items];const [x]=a.splice(from,1);a.splice(to,0,x);
+  const updates={};a.forEach((it,i)=>updates[`${it.id}/order`]=i);
+  update(ref(db,"materials"),updates).catch(e=>toast("Failed: "+e.code));
+}
+async function seed(){
+  const s=[["GE-LIT-ERA","https://tinyurl.com/GE-LIT-ERA"],["UNDERSTANDING-THE-SELF","https://tinyurl.com/2rnjb2du"],["ENTREPRENEURIAL MIND","https://tinyurl.com/mr45m7ht"]];
+  const materials={};s.forEach(([title,url],i)=>{materials[push(ref(db,"materials")).key]={title,url,order:i,color:i}});
+  update(ref(db,"materials"),materials).catch(e=>toast("Failed: "+e.code));
+}
+function openEdit(it){editing=it;$("cardDlgTitle").textContent=it?"Edit card":"Add card";$("cTitle").value=it?.title||"";$("cUrl").value=it?.url||"";$("cardDlg").showModal()}
+$("addBtn").onclick=()=>openEdit(null);
+$("cCancel").onclick=()=>$("cardDlg").close();
+$("cSave").onclick=async()=>{
+  const title=$("cTitle").value.trim(),raw=$("cUrl").value.trim();
+  if(!title||!raw)return toast("Enter a name and a link");
+  const url=fixUrl(raw);
+  try{
+    if(editing)await update(ref(db,`materials/${editing.id}`),{title,url});
+    else await set(push(ref(db,"materials")),{title,url,order:items.length,color:items.length});
+    $("cardDlg").close();toast("Saved");
+  }catch(e){toast("Failed: "+e.code)}
+};
+
+/* ---------- class section + photo slideshow ---------- */
+let sec={}, photos=[], photoIndex=0, photoTimer=null, photoSwapTimer=null;
+let photoElement=null;
+function imageExists(src){
+  return new Promise(resolve=>{
+    const image=new Image();
+    image.onload=()=>resolve(true);
+    image.onerror=()=>resolve(false);
+    image.src=src;
+  });
+}
+async function findNumberedPhotos(){
+  const found=[];
+  for(let number=1;;number++){
+    let src="";
+    for(const extension of ["png","jpg","jpeg"]){
+      const candidate=new URL(`images/${number}.${extension}`,document.baseURI).href;
+      if(await imageExists(candidate)){src=candidate;break}
+    }
+    if(!src)break;
+    found.push(src);
+  }
+  photos=found;
+  photoIndex=0;
+  clearInterval(photoTimer);
+  clearTimeout(photoSwapTimer);
+  const box=$("photoBox");box.textContent="";
+  if(!photos.length){
+    photoElement=null;
+    box.className="ph";box.textContent="Add images/1.png to display class photos";
+    return;
+  }
+  box.className="";
+  photoElement=new Image();photoElement.alt="Class photo of "+(sec.name||"BSIT-1A");
+  photoElement.src=photos[photoIndex];box.appendChild(photoElement);
+  if(photos.length>1)photoTimer=setInterval(()=>{
+    photoIndex=(photoIndex+1)%photos.length;
+    photoElement.classList.add("fading");
+    photoSwapTimer=setTimeout(()=>{
+      if(!photoElement)return;
+      photoElement.src=photos[photoIndex];
+      requestAnimationFrame(()=>photoElement&&photoElement.classList.remove("fading"));
+    },800);
+  },4500);
+}
+onValue(ref(db,"config/section"),s=>{
+  sec=s.val()||{};
+  $("secName").textContent=sec.name||"BSIT-1A";
+  $("secSub").textContent=sec.sub||"Our section's shared study corner.";
+  $("photoCap").textContent=sec.caption||"";
+  if(photoElement)photoElement.alt="Class photo of "+(sec.name||"BSIT-1A");
+});
+const saveSec=d=>update(ref(db,"config/section"),d).then(()=>toast("Saved")).catch(e=>toast("Failed: "+e.code));
+findNumberedPhotos();
+$("secEdit").onclick=()=>{$("sName").value=sec.name||"BSIT-1A";$("sSub").value=sec.sub||"Our section's shared study corner.";$("sCap").value=sec.caption||"";$("secDlg").showModal()};
+$("sCancel").onclick=()=>$("secDlg").close();
+$("sSave").onclick=()=>{saveSec({name:$("sName").value.trim()||"BSIT-1A",sub:$("sSub").value.trim(),caption:$("sCap").value.trim()});$("secDlg").close()};
+
+/* ---------- in-site viewer ---------- */
+function route(){
+  const m=location.hash.match(/^#\/m\/(.+)$/),it=m&&items.find(x=>x.id===m[1]);
+  const v=$("viewer");
+  if(!it){viewerRequest++;v.dataset.pending="";v.classList.remove("open");document.body.classList.remove("locked");$("frame").src="about:blank";return}
+  if((v.classList.contains("open")&&v.dataset.id===it.id)||v.dataset.pending===it.id)return;
+  if(!viewerAccess.has(it.id)){
+    alert("MUST ACCESS THROUGH BSIT_STUDY");
+    viewerRequest++;
+    v.dataset.pending="";
+    history.replaceState(null,"",location.pathname+location.search);
+    v.classList.remove("open");document.body.classList.remove("locked");$("frame").src="about:blank";
+    return;
+  }
+  viewerAccess.delete(it.id);
+  const request=++viewerRequest;
+  v.dataset.pending=it.id;
+  $("vtitle").textContent=it.title;$("vopen").href=it.url;$("vnote").style.display="none";
+  document.body.classList.add("locked");
+  makeTicketedUrl(it).then(url=>{
+    if(request!==viewerRequest||location.hash!=="#/m/"+it.id)return;
+    v.dataset.pending="";v.dataset.id=it.id;$("frame").src=url;v.classList.add("open");
+    clearTimeout(route.t);route.t=setTimeout(()=>$("vnote").style.display="block",4000);
+  }).catch(error=>{
+    if(request!==viewerRequest)return;
+    v.dataset.pending="";v.classList.remove("open");document.body.classList.remove("locked");
+    history.replaceState(null,"",location.pathname+location.search);
+    toast("Couldn't create a viewing ticket: "+(error.message||error.code||"unknown error"));
+  });
+}
+async function makeTicketedUrl(it){
+  if(!auth.currentUser)await signInAnonymously(auth);
+  const result=await createViewerTicket({materialId:it.id});
+  const url=new URL(it.url);
+  url.searchParams.set("bsit_ticket",result.data.ticket);
+  url.searchParams.set("bsit_material",it.id);
+  return url.href;
+}
+window.addEventListener("hashchange",route);
+$("backBtn").onclick=()=>{location.hash="#/"};
+$("vopen").onclick=async e=>{
+  e.preventDefault();
+  const it=items.find(item=>item.id===$("viewer").dataset.id);
+  if(!it)return;
+  const tab=window.open("about:blank","_blank");
+  if(!tab)return toast("Allow pop-ups to open this material in a new tab");
+  try{tab.location.replace(await makeTicketedUrl(it))}
+  catch(error){tab.close();toast("Couldn't create a viewing ticket: "+(error.message||error.code||"unknown error"))}
+};
+
+/* ---------- memes ---------- */
+$("memeBtn").onclick=()=>$("memeDlg").showModal();
+$("mClose").onclick=()=>$("memeDlg").close();
+$("mSec").oninput=e=>$("mSecN").textContent=e.target.value;
+document.querySelectorAll("[data-fx]").forEach(b=>b.onclick=async()=>{
+  const seconds=+$("mSec").value;
+  await set(ref(db,"config/effect"),{type:b.dataset.fx,seconds,ts:Date.now()}).then(()=>toast("Sent to everyone")).catch(e=>toast("Failed: "+e.code));
+});
+$("mStop").onclick=()=>set(ref(db,"config/effect"),{type:"none",seconds:0,ts:Date.now()}).catch(e=>toast("Failed: "+e.code));
+
+onValue(ref(db,"config/effect"),s=>{
+  const d=s.val();if(!d)return;
+  if(d.type==="none"){stopFx();return}
+  if(isAdmin)return;                              // you are never hit by your own memes
+  const left=d.seconds*1000-(Date.now()-d.ts);    // ignore old effects
+  if(left>0)runFx(d.type,left);
+});
+function stopFx(){clearTimeout(fxTimer);cancelAnimationFrame(stopFx.raf);const f=$("fx");f.className="";f.textContent="";document.body.classList.remove("shake");document.body.style.overflow=""}
+function runFx(type,ms){
+  stopFx();const f=$("fx");
+  if(type==="freeze"){f.className="freeze";document.body.style.overflow="hidden";
+    ["keydown","wheel","touchmove"].forEach(ev=>f.addEventListener(ev,e=>e.preventDefault(),{passive:false}))}
+  if(type==="bsod"){f.className="bsod";f.innerHTML='<div class="s">:(</div><p>Your class ran into a problem and needs to restart. We\'re just collecting some error info.</p><small>It\'s just a meme. It ends by itself.</small>'}
+  if(type==="shake")document.body.classList.add("shake");
+  if(type==="confetti"){f.className="confetti";const c=document.createElement("canvas");f.appendChild(c);c.width=innerWidth;c.height=innerHeight;
+    const x=c.getContext("2d"),P=Array.from({length:160},()=>({x:Math.random()*c.width,y:-Math.random()*c.height,v:2+Math.random()*4,s:5+Math.random()*7,c:COLORS[Math.random()*5|0],r:Math.random()*6}));
+    const step=()=>{x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.y+=p.v;p.r+=.1;if(p.y>c.height)p.y=-10;x.fillStyle=p.c;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillRect(0,0,p.s,p.s*.6);x.restore()});stopFx.raf=requestAnimationFrame(step)};step()}
+  fxTimer=setTimeout(stopFx,ms);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "materials": {
+      ".read": true,
+      "$materialId": {
+        ".write": "auth != null && auth.token.email_verified == true && auth.token.email === 'forestparty223@gmail.com'"
+      }
+    },
+    "config": {
+      ".read": true,
+      "$configId": {
+        ".write": "auth != null && auth.token.email_verified == true && auth.token.email === 'forestparty223@gmail.com'"
+      }
+    },
+    "viewerTickets": {
+      ".indexOn": ["expiresAt"]
+    }
+  }
+}
