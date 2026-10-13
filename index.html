@@ -155,7 +155,6 @@ input[type=text],input[type=url]{font-size:16px}
 
 <div id="viewer">
   <div id="vbar"><button class="b" id="backBtn">Back</button><h3 id="vtitle"></h3></div>
-  <div id="vnote">Page blank? Some sites don't allow being shown inside other sites. Try a Google Drive/Docs share link instead.</div>
   <iframe id="frame" allow="fullscreen" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation"></iframe>
 </div>
 
@@ -373,12 +372,11 @@ function route(){
   viewerAccess.delete(it.id);
   const request=++viewerRequest;
   v.dataset.pending=it.id;
-  $("vtitle").textContent=it.title;$("vnote").style.display="none";
+  $("vtitle").textContent=it.title;
   document.body.classList.add("locked");
   makeTicketedUrl(it).then(url=>{
     if(request!==viewerRequest||location.hash!=="#/m/"+it.id)return;
     v.dataset.pending="";v.dataset.id=it.id;$("frame").src=url;v.classList.add("open");
-    clearTimeout(route.t);route.t=setTimeout(()=>$("vnote").style.display="block",4000);
   }).catch(error=>{
     if(request!==viewerRequest)return;
     v.dataset.pending="";v.classList.remove("open");document.body.classList.remove("locked");
