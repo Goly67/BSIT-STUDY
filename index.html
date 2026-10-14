@@ -220,7 +220,7 @@ const ytId=u=>{try{const x=new URL(u);let id="";
     else{const m=x.pathname.match(/^\/(?:embed|shorts|live)\/([\w-]{11})/);if(m)id=m[1]}
   }
   return /^[\w-]{11}$/.test(id)?id:""}catch{return ""}};
-const ytEmbed=id=>`https://www.youtube.com/embed/${id}?controls=0&disablekb=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&playsinline=1&autoplay=1&mute=1`;
+const ytEmbed=id=>`https://www.youtube.com/embed/${id}?controls=0&disablekb=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&playsinline=1&autoplay=1&mute=1&loop=1&playlist=${id}`;
 const isYt=u=>{try{const x=new URL(u);return x.hostname==="www.youtube.com"&&x.pathname.startsWith("/embed/")}catch{return false}};
 
 const toast=(t)=>{const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",2600)};
@@ -385,7 +385,7 @@ function route(){
   v.dataset.pending=it.id;
   $("vtitle").textContent=it.title;
   document.body.classList.add("locked");
-  (isYt(it.url)?Promise.resolve(it.url):makeTicketedUrl(it)).then(url=>{
+  (isYt(it.url)?Promise.resolve(ytEmbed(ytId(it.url))):makeTicketedUrl(it)).then(url=>{
     if(request!==viewerRequest||location.hash!=="#/m/"+it.id)return;
     v.dataset.pending="";v.dataset.id=it.id;$("frame").src=url;v.classList.add("open");
     $("frame").referrerPolicy=isYt(url)?"strict-origin-when-cross-origin":"no-referrer";
