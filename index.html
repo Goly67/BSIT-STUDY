@@ -155,8 +155,7 @@ input[type=text],input[type=url]{font-size:16px}
 
 <div id="viewer">
   <div id="vbar"><button class="b" id="backBtn">Back</button><h3 id="vtitle"></h3></div>
-  <iframe id="frame" allow="fullscreen" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation allow-downloads"></iframe>
-</div>
+  <iframe id="frame" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation"></iframe>
 
 <dialog id="cardDlg">
   <h3 id="cardDlgTitle">Add card</h3>
@@ -388,7 +387,6 @@ function route(){
   (isYt(it.url)?Promise.resolve(ytEmbed(ytId(it.url))):makeTicketedUrl(it)).then(url=>{
     if(request!==viewerRequest||location.hash!=="#/m/"+it.id)return;
     v.dataset.pending="";v.dataset.id=it.id;$("frame").src=url;v.classList.add("open");
-    $("frame").referrerPolicy=isYt(url)?"strict-origin-when-cross-origin":"no-referrer";
   }).catch(error=>{
     if(request!==viewerRequest)return;
     v.dataset.pending="";v.classList.remove("open");document.body.classList.remove("locked");
