@@ -219,7 +219,7 @@ const ytId=u=>{try{const x=new URL(u);let id="";
     else{const m=x.pathname.match(/^\/(?:embed|shorts|live)\/([\w-]{11})/);if(m)id=m[1]}
   }
   return /^[\w-]{11}$/.test(id)?id:""}catch{return ""}};
-const ytEmbed=id=>`https://www.youtube.com/embed/${id}?controls=0&disablekb=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&playsinline=1&autoplay=1&mute=1&loop=1&playlist=${id}`;
+const ytEmbed=id=>`https://www.youtube.com/embed/${id}?controls=0&disablekb=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&playsinline=1&loop=1&playlist=${id}`;
 const isYt=u=>{try{const x=new URL(u);return x.hostname==="www.youtube.com"&&x.pathname.startsWith("/embed/")}catch{return false}};
 
 const toast=(t)=>{const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",2600)};
