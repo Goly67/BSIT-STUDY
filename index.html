@@ -76,6 +76,8 @@ footer button{background:none;border:0;color:var(--muted);text-decoration:underl
 #frame{flex:1;width:100%;border:0;background:#fff}
 /* dialogs */
 dialog{border:2px solid var(--ink);border-radius:14px;padding:22px;width:min(440px,92vw);font-family:inherit;color:var(--ink)}
+dialog:not([open]){display:none}
+dialog.fallback-open{position:fixed;inset:50% auto auto 50%;transform:translate(-50%,-50%);z-index:10000;display:block;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 0 0 100vmax rgba(22,37,59,.55)}
 dialog::backdrop{background:rgba(22,37,59,.55)}
 dialog h3{margin:0 0 14px}
 label{display:block;font-size:.85rem;margin:10px 0 4px}
@@ -211,6 +213,16 @@ const $=id=>document.getElementById(id);
 const COLORS=["#ffe45c","#8fd3b6","#9ec5ff","#ffb4a2","#d4b8ff"];
 let items=[], isAdmin=false, editing=null, dragId=null, fxTimer=null, lastFx=0, viewerRequest=0;
 const viewerAccess=new Set();
+const showDialog=dialog=>{
+  if(typeof dialog.showModal==="function"){dialog.showModal();return}
+  dialog.classList.add("fallback-open");
+  dialog.setAttribute("open","");
+};
+const closeDialog=dialog=>{
+  if(typeof dialog.close==="function"){dialog.close();return}
+  dialog.classList.remove("fallback-open");
+  dialog.removeAttribute("open");
+};
 
 const ytId=u=>{try{const x=new URL(u);let id="";
   if(x.hostname==="youtu.be")id=x.pathname.slice(1);
@@ -293,9 +305,9 @@ async function seed(){
   const materials={};s.forEach(([title,url],i)=>{materials[push(ref(db,"materials")).key]={title,url,order:i,color:i}});
   update(ref(db,"materials"),materials).catch(e=>toast("Failed: "+e.code));
 }
-function openEdit(it){editing=it;$("cardDlgTitle").textContent=it?"Edit card":"Add card";$("cTitle").value=it?.title||"";$("cUrl").value=it?.url||"";$("cardDlg").showModal()}
+function openEdit(it){editing=it;$("cardDlgTitle").textContent=it?"Edit card":"Add card";$("cTitle").value=it?.title||"";$("cUrl").value=it?.url||"";showDialog($("cardDlg"))}
 $("addBtn").onclick=()=>openEdit(null);
-$("cCancel").onclick=()=>$("cardDlg").close();
+$("cCancel").onclick=()=>closeDialog($("cardDlg"));
 $("cSave").onclick=async()=>{
   const title=$("cTitle").value.trim(),raw=$("cUrl").value.trim();
   if(!title||!raw)return toast("Enter a name and a link");
@@ -303,7 +315,7 @@ $("cSave").onclick=async()=>{
   try{
     if(editing)await update(ref(db,`materials/${editing.id}`),{title,url});
     else await set(push(ref(db,"materials")),{title,url,order:items.length,color:items.length});
-    $("cardDlg").close();toast("Saved");
+    closeDialog($("cardDlg"));toast("Saved");
   }catch(e){toast("Failed: "+e.code)}
 };
 
@@ -361,9 +373,9 @@ onValue(ref(db,"config/section"),s=>{
 });
 const saveSec=d=>update(ref(db,"config/section"),d).then(()=>toast("Saved")).catch(e=>toast("Failed: "+e.code));
 findNumberedPhotos();
-$("secEdit").onclick=()=>{$("sName").value=sec.name||"MGA NAWNG";$("sSub").value=sec.sub||"may ereklamo ka? PORPIS RAY MAKATUBAG NIMO DOL.";$("sCap").value=sec.caption||"";$("secDlg").showModal()};
-$("sCancel").onclick=()=>$("secDlg").close();
-$("sSave").onclick=()=>{saveSec({name:$("sName").value.trim()||"MGA NAWNG",sub:$("sSub").value.trim(),caption:$("sCap").value.trim()});$("secDlg").close()};
+$("secEdit").onclick=()=>{$("sName").value=sec.name||"MGA NAWNG";$("sSub").value=sec.sub||"may ereklamo ka? PORPIS RAY MAKATUBAG NIMO DOL.";$("sCap").value=sec.caption||"";showDialog($("secDlg"))};
+$("sCancel").onclick=()=>closeDialog($("secDlg"));
+$("sSave").onclick=()=>{saveSec({name:$("sName").value.trim()||"MGA NAWNG",sub:$("sSub").value.trim(),caption:$("sCap").value.trim()});closeDialog($("secDlg"))};
 
 /* ---------- in-site viewer ---------- */
 function route(){
@@ -412,8 +424,8 @@ async function makeTicketedUrl(it){
 window.addEventListener("hashchange",route);
 $("backBtn").onclick=()=>{location.hash="#/"};
 /* ---------- memes ---------- */
-$("memeBtn").onclick=()=>$("memeDlg").showModal();
-$("mClose").onclick=()=>$("memeDlg").close();
+$("memeBtn").onclick=()=>showDialog($("memeDlg"));
+$("mClose").onclick=()=>closeDialog($("memeDlg"));
 $("mSec").oninput=e=>$("mSecN").textContent=e.target.value;
 document.querySelectorAll("[data-fx]").forEach(b=>b.onclick=async()=>{
   const seconds=+$("mSec").value;
