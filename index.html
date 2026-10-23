@@ -74,12 +74,11 @@ footer button{background:none;border:0;color:var(--muted);text-decoration:underl
 #vbar button.b{border-color:#fff;background:transparent;color:#fff}
 #vnote{display:none;padding:6px 12px;background:var(--hl);font-size:.85rem}
 #frame{flex:1;width:100%;border:0;background:#fff}
-/* dialogs */
-dialog{border:2px solid var(--ink);border-radius:14px;padding:22px;width:min(440px,92vw);font-family:inherit;color:var(--ink)}
-dialog:not([open]){display:none}
-dialog.fallback-open{position:fixed;inset:50% auto auto 50%;transform:translate(-50%,-50%);z-index:10000;display:block;max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 0 0 100vmax rgba(22,37,59,.55)}
-dialog::backdrop{background:rgba(22,37,59,.55)}
-dialog h3{margin:0 0 14px}
+/* admin modals */
+.modal[hidden]{display:none}
+.modal:not([hidden]){position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(22,37,59,.55)}
+.modal-content{box-sizing:border-box;border:2px solid var(--ink);border-radius:14px;padding:22px;width:min(440px,92vw);max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto;background:#fff;font-family:inherit;color:var(--ink)}
+.modal-content h3{margin:0 0 14px}
 label{display:block;font-size:.85rem;margin:10px 0 4px}
 input[type=text],input[type=url],input[type=range]{width:100%;font:inherit;padding:9px;border:2px solid var(--ink);border-radius:8px}
 input[type=range]{padding:0}
@@ -120,7 +119,7 @@ input[type=text],input[type=url]{font-size:16px}
   .tools .b{flex:1 1 70px}
   #vbar{gap:6px}
   #vnote{font-size:.8rem}
-  dialog{padding:18px}
+  .modal-content{padding:18px}
   #inBtn{padding:14px 24px}
   footer{padding:0 16px 32px}
 }
@@ -159,34 +158,40 @@ input[type=text],input[type=url]{font-size:16px}
   <div id="vbar"><button class="b" id="backBtn">Back</button><h3 id="vtitle"></h3></div>
   <iframe id="frame" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation"></iframe>
 
-<dialog id="cardDlg">
-  <h3 id="cardDlgTitle">Add card</h3>
-  <label for="cTitle">Name</label><input id="cTitle" type="text" maxlength="80">
-  <label for="cUrl">Link</label><input id="cUrl" type="url" placeholder="https://tinyurl.com/...">
-  <div class="row"><button class="b" id="cSave">Save</button><button class="b" id="cCancel">Cancel</button></div>
-</dialog>
-
-<dialog id="secDlg">
-  <h3>Edit section</h3>
-  <label for="sName">Section name</label><input id="sName" type="text" maxlength="30">
-  <label for="sSub">Tagline</label><input id="sSub" type="text" maxlength="120">
-  <label for="sCap">Photo caption</label><input id="sCap" type="text" maxlength="80" placeholder="e.g. Our first day, 2026">
-  <div class="row"><button class="b" id="sSave">Save</button><button class="b" id="sCancel">Cancel</button></div>
-</dialog>
-
-<dialog id="memeDlg">
-  <h3>Memes (sent to everyone viewing)</h3>
-  <label for="mSec">Duration: <span id="mSecN">10</span> seconds</label>
-  <input id="mSec" type="range" min="3" max="30" value="10">
-  <div class="row">
-    <button class="b" data-fx="freeze">Freeze screen</button>
-    <button class="b" data-fx="bsod">Fake blue screen</button>
-    <button class="b" data-fx="confetti">Confetti</button>
-    <button class="b" data-fx="shake">Earthquake</button>
+<div class="modal" id="cardDlg" role="dialog" aria-modal="true" aria-labelledby="cardDlgTitle" hidden>
+  <div class="modal-content">
+    <h3 id="cardDlgTitle">Add card</h3>
+    <label for="cTitle">Name</label><input id="cTitle" type="text" maxlength="80">
+    <label for="cUrl">Link</label><input id="cUrl" type="url" placeholder="https://tinyurl.com/...">
+    <div class="row"><button class="b" id="cSave">Save</button><button class="b" id="cCancel">Cancel</button></div>
   </div>
-  <div class="row"><button class="b red" id="mStop">Stop all now</button><button class="b" id="mClose">Close</button></div>
-  <p style="font-size:.8rem;color:#5b6b80">You won't be affected. Effects end by themselves.</p>
-</dialog>
+</div>
+
+<div class="modal" id="secDlg" role="dialog" aria-modal="true" aria-labelledby="secDlgTitle" hidden>
+  <div class="modal-content">
+    <h3 id="secDlgTitle">Edit section</h3>
+    <label for="sName">Section name</label><input id="sName" type="text" maxlength="30">
+    <label for="sSub">Tagline</label><input id="sSub" type="text" maxlength="120">
+    <label for="sCap">Photo caption</label><input id="sCap" type="text" maxlength="80" placeholder="e.g. Our first day, 2026">
+    <div class="row"><button class="b" id="sSave">Save</button><button class="b" id="sCancel">Cancel</button></div>
+  </div>
+</div>
+
+<div class="modal" id="memeDlg" role="dialog" aria-modal="true" aria-labelledby="memeDlgTitle" hidden>
+  <div class="modal-content">
+    <h3 id="memeDlgTitle">Memes (sent to everyone viewing)</h3>
+    <label for="mSec">Duration: <span id="mSecN">10</span> seconds</label>
+    <input id="mSec" type="range" min="3" max="30" value="10">
+    <div class="row">
+      <button class="b" data-fx="freeze">Freeze screen</button>
+      <button class="b" data-fx="bsod">Fake blue screen</button>
+      <button class="b" data-fx="confetti">Confetti</button>
+      <button class="b" data-fx="shake">Earthquake</button>
+    </div>
+    <div class="row"><button class="b red" id="mStop">Stop all now</button><button class="b" id="mClose">Close</button></div>
+    <p style="font-size:.8rem;color:#5b6b80">You won't be affected. Effects end by themselves.</p>
+  </div>
+</div>
 
 <div id="fx"></div><div id="toast"></div>
 
@@ -213,16 +218,33 @@ const $=id=>document.getElementById(id);
 const COLORS=["#ffe45c","#8fd3b6","#9ec5ff","#ffb4a2","#d4b8ff"];
 let items=[], isAdmin=false, editing=null, dragId=null, fxTimer=null, lastFx=0, viewerRequest=0;
 const viewerAccess=new Set();
+let activeDialog=null, dialogReturnFocus=null;
 const showDialog=dialog=>{
-  if(typeof dialog.showModal==="function"){dialog.showModal();return}
-  dialog.classList.add("fallback-open");
-  dialog.setAttribute("open","");
+  if(activeDialog&&activeDialog!==dialog)closeDialog(activeDialog);
+  dialogReturnFocus=document.activeElement instanceof HTMLElement?document.activeElement:null;
+  activeDialog=dialog;
+  dialog.hidden=false;
+  dialog.querySelector("input,button")?.focus();
 };
 const closeDialog=dialog=>{
-  if(typeof dialog.close==="function"){dialog.close();return}
-  dialog.classList.remove("fallback-open");
-  dialog.removeAttribute("open");
+  dialog.hidden=true;
+  if(activeDialog===dialog){
+    activeDialog=null;
+    if(dialogReturnFocus?.isConnected)dialogReturnFocus.focus();
+    dialogReturnFocus=null;
+  }
 };
+document.addEventListener("keydown",e=>{
+  if(!activeDialog)return;
+  if(e.key==="Escape"){closeDialog(activeDialog);return}
+  if(e.key==="Tab"){
+    const focusable=[...activeDialog.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')].filter(el=>el.offsetParent!==null);
+    if(!focusable.length){e.preventDefault();return}
+    const first=focusable[0],last=focusable[focusable.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
+  }
+});
 
 const ytId=u=>{try{const x=new URL(u);let id="";
   if(x.hostname==="youtu.be")id=x.pathname.slice(1);
