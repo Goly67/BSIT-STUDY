@@ -244,8 +244,14 @@ const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch{return 
 /* ---------- auth ---------- */
 $("inBtn").onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).catch(e=>toast("Sign-in failed: "+e.code));
 $("outBtn").onclick=()=>signOut(auth);
-onAuthStateChanged(auth,u=>{
-  isAdmin=!!(u&&u.emailVerified&&ADMIN_EMAILS.includes(u.email));
+onAuthStateChanged(auth,async u=>{
+  isAdmin=false;
+  if(u){
+    try{
+      const claims=(await u.getIdTokenResult(true)).claims;
+      isAdmin=claims.email_verified===true&&ADMIN_EMAILS.includes(claims.email);
+    }catch(e){toast("Couldn't verify admin access: "+(e.code||e.message||"unknown error"))}
+  }
   $("adminBar").style.display=isAdmin?"flex":"none";
   $("inBtn").style.display=isAdmin?"none":"inline-flex";
   $("heroTools").style.display=isAdmin?"flex":"none";
