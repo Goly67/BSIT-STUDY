@@ -1,5 +1,9 @@
 {
+  "rewrites": [
+    { "source": "/s/:id", "destination": "/api/share" }
+  ],
   "functions": {
-    "api/og.js": { "includeFiles": "images/**" }
+    "api/og.js": { "includeFiles": "images/**" },
+    "api/share.js": { "includeFiles": "{index.html,images/**}" }
   }
 }
