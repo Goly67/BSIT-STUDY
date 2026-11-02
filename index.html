@@ -3,8 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>PAG TUON MO BSIT-1A</title>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<title>MGA TUN ANAN SA BSIT-1A</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BSIT-1A">
+<meta property="og:title" content="MGA TUN ANAN SA BSIT-1A">
+<meta property="og:description" content="Study materials ug class photos sa BSIT-1A.">
+<meta property="og:url" content="https://bsit-study.vercel.app/">
+<meta property="og:image" content="https://bsit-study.vercel.app/api/og">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://bsit-study.vercel.app/api/og">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root{--paper:#eef2ea;--ink:#16253b;--muted:#5b6b80;--hl:#ffe45c;--red:#d64545;--line:#c9d4c3}
 *{box-sizing:border-box}
@@ -124,6 +132,37 @@ input[type=text],input[type=url]{font-size:16px}
   footer{padding:0 16px 32px}
 }
 @media (max-width:360px){#vbar a{display:none}}
+/* ===== sketch-style admin bar + hero tools ===== */
+#adminBar{position:relative;isolation:isolate;background:none;color:var(--ink);border-radius:0;padding:22px 16px 14px;margin:14px 0 26px;gap:12px;transform:rotate(-.5deg)}
+#adminBar::before{content:"";position:absolute;inset:0;z-index:-1;background:#fffdf4 repeating-linear-gradient(transparent 0 25px,rgba(91,140,200,.2) 25px 26px);border:2.5px solid var(--ink);border-radius:14px 5px 16px 6px/6px 16px 5px 14px;filter:url(#rough)}
+#adminBar::after{content:"";position:absolute;inset:0;z-index:-2;transform:translate(7px,7px);border-radius:14px 5px 16px 6px/6px 16px 5px 14px;background:repeating-linear-gradient(-45deg,var(--ink) 0 1.6px,transparent 1.6px 6px);filter:url(#rough)}
+#adminBar .tape{position:absolute;top:-12px;left:22px;width:84px;height:24px;background:rgba(143,211,182,.8);border:1px solid rgba(22,37,59,.2);transform:rotate(-5deg);clip-path:polygon(3% 0,97% 6%,100% 50%,96% 100%,2% 94%,0 45%)}
+#adminBar .tape+.tape{left:auto;right:26px;background:rgba(255,180,162,.8);transform:rotate(4deg)}
+#adminBar b{display:inline-flex;align-items:center;gap:6px;margin-right:auto;font:700 1.75rem/1 'Caveat',cursive;padding:0 6px;background:linear-gradient(100deg,transparent 1%,rgba(255,228,92,.95) 4%,rgba(255,228,92,.7) 95%,transparent 98%) 0 75%/100% 52% no-repeat}
+#adminBar b svg{width:24px;height:24px}
+#adminBar .b,#heroTools .b{position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;gap:7px;font:700 1.3rem/1 'Caveat',cursive;color:var(--ink);background:none;border:0;border-radius:0;padding:9px 16px 9px 12px;cursor:pointer;transition:transform .15s}
+#adminBar .b::before,#heroTools .b::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--fill,#fff);border:2px solid var(--ink);border-radius:255px 15px 225px 15px/15px 225px 15px 255px;filter:url(#rough);transition:background .15s}
+#adminBar .b svg,#heroTools .b svg{width:20px;height:20px;flex:none}
+#adminBar .b:nth-of-type(odd){transform:rotate(-1.5deg)}
+#adminBar .b:nth-of-type(even){transform:rotate(1.2deg)}
+#adminBar .b:hover,#adminBar .b:focus-visible,#heroTools .b:hover,#heroTools .b:focus-visible{background:none;color:var(--ink);outline:none;transform:rotate(-2deg) scale(1.07)}
+#adminBar .b:hover::before,#adminBar .b:focus-visible::before,#heroTools .b:hover::before,#heroTools .b:focus-visible::before{background:var(--fill,#fff) repeating-linear-gradient(-45deg,rgba(22,37,59,.22) 0 2px,transparent 2px 7px)}
+#adminBar .b:active,#heroTools .b:active{transform:scale(.95)}
+#addBtn{--fill:#ffe45c}#memeBtn{--fill:#ffb4a2}#outBtn{--fill:#fff}
+#adminBar #outBtn{color:var(--red)}
+#heroTools{align-items:center;gap:6px;margin-top:22px}
+#heroTools .b{--fill:#fff3a6;font-size:1.4rem;padding:12px 20px 12px 16px;transform:rotate(-2deg)}
+#heroTools .b::before{border-radius:3px 4px 22px 3px/3px 3px 18px 4px;box-shadow:3px 5px 0 rgba(22,37,59,.18)}
+#heroTools .note{display:inline-flex;align-items:center;gap:2px;font:600 1.2rem/1 'Caveat',cursive;color:var(--muted);transform:rotate(-4deg)}
+#heroTools .note svg{width:44px;height:30px}
+@media (max-width:640px){
+  #adminBar{padding:20px 12px 12px;gap:10px}
+  #adminBar b{flex-basis:auto;width:100%;justify-content:center;margin:0 0 2px}
+  #adminBar .tape{width:64px}
+  #adminBar .b{flex:1 1 auto;white-space:nowrap;padding:9px 12px 9px 10px}
+  #heroTools .note{display:none}
+}
+@media (prefers-reduced-motion:reduce){#adminBar .b,#heroTools .b{transition:none}}
 </style>
 </head>
 <body>
@@ -133,20 +172,22 @@ input[type=text],input[type=url]{font-size:16px}
 </header>
 <main>
   <div id="adminBar" class="bar" style="display:none">
-    <b>Admin mode</b>
-    <button class="b" id="addBtn">+ Add card</button>
-    <button class="b" id="memeBtn">Memes</button>
-    <button class="b" id="outBtn">Sign out</button>
+    <i class="tape"></i><i class="tape"></i>
+    <b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.2 19.6l1-4.4L16 4.3c.9-.9 2.3-.8 3.1.1.8.9.8 2.1-.1 3L8.3 18.3z"/><path d="M14.2 6.2l3.4 3.3M4.4 19.8c1.2-.1 2.6-.6 3.8-1.4"/></svg>Admin mode</b>
+    <button class="b" id="addBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.2 4.6c-.4 4.9.3 9.7-.1 14.9M4.8 12.4c4.8-.6 9.5.3 14.6-.3"/></svg>Add card</button>
+    <button class="b" id="memeBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.4c5 .1 8.6 3.6 8.4 8.7-.2 4.8-3.9 8.3-8.6 8.2-4.9-.2-8.4-3.8-8.2-8.8.2-4.6 3.8-8.2 8.4-8.1z"/><path d="M8.6 9.4v1.3M15.2 9.1v1.4M7.6 14.2c2.4 2.8 6.3 2.9 8.9-.2"/></svg>Memes</button>
+    <button class="b" id="outBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.6 4.3H5.2c-.4 5.3.3 10.4-.1 15.5h8.3"/><path d="M10.4 12.1c3.4-.3 6.8.2 10.1-.2M17.2 8.6l3.4 3.4-3.6 3.5"/></svg>Sign out</button>
   </div>
   <div id="grid" class="grid"></div>
 </main>
 <section id="hero">
   <figure id="polaroid"><div id="photoBox" class="ph">Class photo goes here</div><figcaption id="photoCap"></figcaption></figure>
   <div class="heroText">
-    <div id="secName">PAG TUON MO BSIT-1A</div>
+    <div id="secName">MGA TUN ANAN SA BSIT-1A</div>
     <p id="secSub">may ereklamo ka? PORPIS RAY MAKATUBAG NIMO DOL.</p>
     <div id="heroTools">
-      <button class="b" id="secEdit">Edit section text</button>
+      <span class="note">admins only<svg viewBox="0 0 44 30" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 22c9 4 22 3 31-9M27 11.5l7.5 1.2-1 7.6"/></svg></span>
+      <button class="b" id="secEdit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.2 19.6l1-4.4L16 4.3c.9-.9 2.3-.8 3.1.1.8.9.8 2.1-.1 3L8.3 18.3z"/><path d="M14.2 6.2l3.4 3.3"/></svg>Edit section text</button>
     </div>
   </div>
 </section>
@@ -194,6 +235,7 @@ input[type=text],input[type=url]{font-size:16px}
   </div>
 </div>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="rough"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="3.5"/></filter></svg>
 <div id="fx"></div><div id="toast"></div>
 
 <script type="module">
