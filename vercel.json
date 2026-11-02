@@ -1,0 +1,5 @@
+{
+  "functions": {
+    "api/og.js": { "includeFiles": "images/**" }
+  }
+}

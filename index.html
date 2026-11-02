@@ -101,7 +101,6 @@ input[type=range]{padding:0}
 #fx.bsod small{position:absolute;bottom:14px;left:8vw;opacity:.7}
 #fx canvas{width:100%;height:100%;display:block;pointer-events:none}
 #fx.confetti{display:block;pointer-events:none}
-body.shake main,body.shake header{animation:shake .15s infinite}
 @keyframes shake{0%{transform:translate(4px,2px)}25%{transform:translate(-4px,-3px)}50%{transform:translate(3px,-2px)}75%{transform:translate(-3px,3px)}100%{transform:translate(4px,2px)}}
 @media (prefers-reduced-motion:reduce){.card{transition:none}}
 @media (prefers-reduced-motion:reduce){#photoBox img{transition:none}}
@@ -140,14 +139,14 @@ input[type=text],input[type=url]{font-size:16px}
 #adminBar .tape+.tape{left:auto;right:26px;background:rgba(255,180,162,.8);transform:rotate(4deg)}
 #adminBar b{display:inline-flex;align-items:center;gap:6px;margin-right:auto;font:700 1.75rem/1 'Caveat',cursive;padding:0 6px;background:linear-gradient(100deg,transparent 1%,rgba(255,228,92,.95) 4%,rgba(255,228,92,.7) 95%,transparent 98%) 0 75%/100% 52% no-repeat}
 #adminBar b svg{width:24px;height:24px}
-#adminBar .b,#heroTools .b{position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;gap:7px;font:700 1.3rem/1 'Caveat',cursive;color:var(--ink);background:none;border:0;border-radius:0;padding:9px 16px 9px 12px;cursor:pointer;transition:transform .15s}
-#adminBar .b::before,#heroTools .b::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--fill,#fff);border:2px solid var(--ink);border-radius:255px 15px 225px 15px/15px 225px 15px 255px;filter:url(#rough);transition:background .15s}
-#adminBar .b svg,#heroTools .b svg{width:20px;height:20px;flex:none}
+#adminBar .b,#heroTools .b,.modal .b,.tools .b{position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;gap:7px;font:700 1.3rem/1 'Caveat',cursive;color:var(--ink);background:none;border:0;border-radius:0;padding:9px 16px 9px 12px;cursor:pointer;transition:transform .15s}
+#adminBar .b::before,#heroTools .b::before,.modal .b::before,.tools .b::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--fill,#fff);border:2px solid var(--ink);border-radius:255px 15px 225px 15px/15px 225px 15px 255px;filter:url(#rough);transition:background .15s}
+#adminBar .b svg,#heroTools .b svg,.modal .b svg,.tools .b svg{width:20px;height:20px;flex:none}
 #adminBar .b:nth-of-type(odd){transform:rotate(-1.5deg)}
 #adminBar .b:nth-of-type(even){transform:rotate(1.2deg)}
-#adminBar .b:hover,#adminBar .b:focus-visible,#heroTools .b:hover,#heroTools .b:focus-visible{background:none;color:var(--ink);outline:none;transform:rotate(-2deg) scale(1.07)}
-#adminBar .b:hover::before,#adminBar .b:focus-visible::before,#heroTools .b:hover::before,#heroTools .b:focus-visible::before{background:var(--fill,#fff) repeating-linear-gradient(-45deg,rgba(22,37,59,.22) 0 2px,transparent 2px 7px)}
-#adminBar .b:active,#heroTools .b:active{transform:scale(.95)}
+#adminBar .b:hover,#adminBar .b:focus-visible,#heroTools .b:hover,.modal .b:hover,.tools .b:hover,#heroTools .b:focus-visible,.modal .b:focus-visible,.tools .b:focus-visible{background:none;color:var(--ink);outline:none;transform:rotate(-2deg) scale(1.07)}
+#adminBar .b:hover::before,#adminBar .b:focus-visible::before,#heroTools .b:hover::before,.modal .b:hover::before,.tools .b:hover::before,#heroTools .b:focus-visible::before,.modal .b:focus-visible::before,.tools .b:focus-visible::before{background:var(--fill,#fff) repeating-linear-gradient(-45deg,rgba(22,37,59,.22) 0 2px,transparent 2px 7px)}
+#adminBar .b:active,#heroTools .b:active,.modal .b:active,.tools .b:active{transform:scale(.95)}
 #addBtn{--fill:#ffe45c}#memeBtn{--fill:#ffb4a2}#outBtn{--fill:#fff}
 #adminBar #outBtn{color:var(--red)}
 #heroTools{align-items:center;gap:6px;margin-top:22px}
@@ -162,7 +161,83 @@ input[type=text],input[type=url]{font-size:16px}
   #adminBar .b{flex:1 1 auto;white-space:nowrap;padding:9px 12px 9px 10px}
   #heroTools .note{display:none}
 }
-@media (prefers-reduced-motion:reduce){#adminBar .b,#heroTools .b{transition:none}}
+@media (prefers-reduced-motion:reduce){#adminBar .b,#heroTools .b,.modal .b,.tools .b{transition:none}}
+/* ===== sketch modals ===== */
+.modal:not([hidden]){align-items:flex-start;overflow-y:auto;overscroll-behavior:contain;padding:30px 14px;background:rgba(22,37,59,.5) radial-gradient(rgba(255,255,255,.14) 1px,transparent 1.6px) 0 0/14px 14px;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.modal-content{--m:30px;position:relative;isolation:isolate;margin:auto;width:min(460px,100%);max-height:none;overflow:visible;background:none;border:0;border-radius:0;padding:30px 24px 22px calc(var(--m) + 16px);transform:rotate(-.6deg);animation:sheetIn .3s cubic-bezier(.2,1.4,.4,1)}
+.modal-content.wide{width:min(640px,100%)}
+.modal-content::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,transparent var(--m),rgba(214,69,69,.5) var(--m) calc(var(--m) + 2px),transparent 0),repeating-linear-gradient(transparent 0 27px,rgba(91,140,200,.22) 27px 28px) 0 16px,#fffdf4;border:2.5px solid var(--ink);border-radius:16px 6px 18px 7px/7px 18px 6px 16px;filter:url(#rough)}
+.modal-content::after{content:"";position:absolute;inset:0;z-index:-2;transform:translate(8px,8px);border-radius:16px 6px 18px 7px/7px 18px 6px 16px;background:repeating-linear-gradient(-45deg,var(--ink) 0 1.6px,transparent 1.6px 6px);filter:url(#rough)}
+.modal-content h3{font:700 2.1rem/1.05 'Caveat',cursive;margin:0 0 12px;padding-right:8px}
+.modal-content h3>span{padding:0 6px;background:linear-gradient(100deg,transparent 1%,rgba(255,228,92,.95) 4%,rgba(255,228,92,.7) 95%,transparent 98%) 0 80%/100% 50% no-repeat}
+.modal-content h3 small{display:block;margin-top:4px;font:600 .9rem 'Bricolage Grotesque',sans-serif;color:var(--muted)}
+.modal-content h3::before{content:"";position:absolute;top:-13px;left:50%;width:96px;height:24px;margin-left:-48px;background:rgba(143,211,182,.85);border:1px solid rgba(22,37,59,.2);transform:rotate(-3deg);clip-path:polygon(3% 0,97% 6%,100% 50%,96% 100%,2% 94%,0 45%)}
+.modal label{font:700 1.3rem/1 'Caveat',cursive;margin:14px 0 6px}
+.modal input[type=text],.modal input[type=url]{background:rgba(255,255,255,.75);border:2px solid var(--ink);border-radius:10px 3px 12px 4px/4px 12px 3px 10px;padding:10px 12px;font-size:16px;transition:box-shadow .15s,background .15s}
+.modal input[type=text]:focus,.modal input[type=url]:focus{outline:none;background:#fffbe0;box-shadow:3px 3px 0 var(--ink)}
+.modal input[type=range]{-webkit-appearance:none;appearance:none;background:none;border:0;height:30px;padding:0;cursor:pointer}
+.modal input[type=range]::-webkit-slider-runnable-track{height:6px;border:2px solid var(--ink);border-radius:8px 3px 8px 3px;background:repeating-linear-gradient(-45deg,var(--ink) 0 1.5px,#fff 1.5px 5px)}
+.modal input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:-12px;border-radius:50% 44% 56% 47%;background:var(--hl);border:2.5px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+.modal input[type=range]::-moz-range-track{height:6px;border:2px solid var(--ink);border-radius:8px 3px;background:repeating-linear-gradient(-45deg,var(--ink) 0 1.5px,#fff 1.5px 5px)}
+.modal input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50% 44% 56% 47%;background:var(--hl);border:2.5px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+.modal input[type=range]:focus-visible{outline:2px dashed var(--ink);outline-offset:4px}
+.modal .row{gap:10px;margin-top:20px}
+#cSave,#sSave{--fill:#ffe45c}
+.modal .b.red,.tools .b.red{--fill:#ffe1e1;color:var(--red)}
+.modal .b.red:hover,.tools .b.red:hover{background:none;color:var(--red)}
+.tools .b{font-size:1.15rem;padding:6px 12px}
+.grp{display:flex;align-items:center;gap:10px;margin:18px 0 8px;font:700 1.4rem/1 'Caveat',cursive}
+.grp::after{content:"";flex:1;height:0;border-top:2px dashed rgba(22,37,59,.35)}
+.fxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
+.modal .fxgrid .b{flex-direction:column;gap:5px;min-height:86px;padding:12px 8px 10px;font-size:1.2rem;line-height:1.05;text-align:center;white-space:normal}
+.fxgrid .b span{font-size:1.75rem;line-height:1}
+.fxgrid .b:nth-child(5n+1){--fill:#fff3a6}.fxgrid .b:nth-child(5n+2){--fill:#c9f0dd}.fxgrid .b:nth-child(5n+3){--fill:#d6e6ff}.fxgrid .b:nth-child(5n+4){--fill:#ffd6cc}.fxgrid .b:nth-child(5n){--fill:#e8dcff}
+.fxgrid .b:nth-child(odd){transform:rotate(-1.2deg)}.fxgrid .b:nth-child(even){transform:rotate(1deg)}
+.msgrow{display:flex;gap:10px;align-items:stretch}
+.msgrow input{flex:1;min-width:0}
+.modal .msgrow .b{--fill:#ffb4a2;white-space:nowrap}
+.modal label.chk{display:inline-flex;align-items:center;gap:8px;margin-top:16px;cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:var(--ink);margin:0}
+.hint{margin:14px 0 0;font-size:.85rem;color:var(--muted)}
+@keyframes sheetIn{from{opacity:0;transform:translateY(18px) rotate(2deg) scale(.96)}}
+#toast{font:700 1.3rem/1.1 'Caveat',cursive;padding:10px 18px;border:2px solid var(--ink);border-radius:12px 4px 14px 5px/5px 14px 4px 12px;transform:translateX(-50%) rotate(-1.5deg);box-shadow:4px 4px 0 var(--hl)}
+@media (max-width:640px){
+  .modal:not([hidden]){padding:24px 10px}
+  .modal-content{--m:20px;padding:28px 16px 18px calc(var(--m) + 12px)}
+  .modal-content h3{font-size:1.85rem}
+  .fxgrid{grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:10px}
+  .modal .fxgrid .b{min-height:78px;font-size:1.1rem}
+  .modal .row .b{flex:1 1 auto}
+  .modal-content::after{transform:translate(5px,5px)}
+}
+@media (max-width:360px){.msgrow{flex-wrap:wrap}.msgrow .b{flex:1}}
+@media (prefers-reduced-motion:reduce){.modal-content{animation:none}}
+/* ===== meme effects ===== */
+#fx.rain,#fx.peek,#fx.bounce,#fx.doodle,#fx.msg{display:block;pointer-events:none;overflow:hidden}
+#fx .pic{position:absolute;display:flex;align-items:center;justify-content:center;object-fit:cover;background:#fff;border:4px solid #fff;outline:2px solid var(--ink);box-shadow:4px 4px 0 rgba(22,37,59,.35);font-size:2.4rem}
+#fx.rain .pic{top:-140px;animation:fall var(--d) linear forwards}
+@keyframes fall{to{transform:translate(var(--x),calc(100vh + 200px)) rotate(var(--r))}}
+#fx.bounce .pic{left:0;top:0;border-width:6px;will-change:transform}
+#fx.peek .pic{animation:peek 2.4s ease-in-out forwards}
+@keyframes peek{0%,100%{transform:translate(0,0) rotate(var(--r))}35%,65%{transform:translate(var(--tx),var(--ty)) rotate(var(--r))}}
+#fx.doodle svg{width:100%;height:100%}
+#fx.doodle path{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.1s ease-out forwards;opacity:.85}
+@keyframes draw{to{stroke-dashoffset:0}}
+#fx.msg{display:flex;align-items:center;justify-content:center;padding:20px}
+#fx .msgcard{position:relative;max-width:min(90vw,700px);padding:34px 30px 22px;background:#fffdf4 repeating-linear-gradient(transparent 0 33px,rgba(91,140,200,.22) 33px 34px);border:3px solid var(--ink);border-radius:16px 6px 18px 7px/7px 18px 6px 16px;box-shadow:10px 10px 0 var(--ink);text-align:center;animation:msgIn .5s cubic-bezier(.2,1.6,.4,1),wob 2.4s ease-in-out .5s infinite}
+#fx .msgcard::before{content:"";position:absolute;top:-16px;left:50%;width:120px;height:30px;margin-left:-60px;background:rgba(255,228,92,.9);transform:rotate(-4deg)}
+#fx .msgcard p{margin:0;font:700 clamp(2.4rem,9vw,5rem)/1 'Caveat',cursive;color:var(--ink);word-break:break-word}
+#fx .msgcard small{display:block;margin-top:10px;font:600 1.3rem 'Caveat',cursive;color:var(--muted)}
+@keyframes msgIn{from{transform:scale(.3) rotate(-12deg);opacity:0}}
+@keyframes wob{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg) scale(1.03)}}
+body:is(.fx-shake,.fx-dizzy,.fx-rainbow,.fx-flip) :is(header,main,#hero,footer,#viewer){will-change:transform,filter}
+body.fx-shake :is(header,main,#hero,footer,#viewer){animation:shake .15s infinite}
+body.fx-dizzy :is(header,main,#hero,footer,#viewer){animation:dizzy 2.2s ease-in-out infinite}
+@keyframes dizzy{0%,100%{transform:rotate(-2.5deg) translateX(-8px);filter:blur(1px)}50%{transform:rotate(2.5deg) translateX(8px) scale(1.02);filter:blur(2.5px)}}
+body.fx-rainbow :is(header,main,#hero,footer,#viewer){animation:rainbow 3s linear infinite}
+@keyframes rainbow{from{filter:hue-rotate(0) saturate(1.6)}to{filter:hue-rotate(360deg) saturate(1.6)}}
+body.fx-flip{display:flex;flex-direction:column-reverse}
+body.fx-flip :is(header,main,#hero,footer,#viewer){transform:rotate(180deg)}
 </style>
 </head>
 <body>
@@ -202,7 +277,7 @@ input[type=text],input[type=url]{font-size:16px}
 
 <div class="modal" id="cardDlg" role="dialog" aria-modal="true" aria-labelledby="cardDlgTitle" hidden>
   <div class="modal-content">
-    <h3 id="cardDlgTitle">Add card</h3>
+    <h3><span id="cardDlgTitle">Add card</span></h3>
     <label for="cTitle">Name</label><input id="cTitle" type="text" maxlength="80">
     <label for="cUrl">Link</label><input id="cUrl" type="url" placeholder="https://tinyurl.com/...">
     <div class="row"><button class="b" id="cSave">Save</button><button class="b" id="cCancel">Cancel</button></div>
@@ -211,7 +286,7 @@ input[type=text],input[type=url]{font-size:16px}
 
 <div class="modal" id="secDlg" role="dialog" aria-modal="true" aria-labelledby="secDlgTitle" hidden>
   <div class="modal-content">
-    <h3 id="secDlgTitle">Edit section</h3>
+    <h3><span id="secDlgTitle">Edit section</span></h3>
     <label for="sName">Section name</label><input id="sName" type="text" maxlength="30">
     <label for="sSub">Tagline</label><input id="sSub" type="text" maxlength="120">
     <label for="sCap">Photo caption</label><input id="sCap" type="text" maxlength="80" placeholder="e.g. Our first day, 2026">
@@ -220,18 +295,35 @@ input[type=text],input[type=url]{font-size:16px}
 </div>
 
 <div class="modal" id="memeDlg" role="dialog" aria-modal="true" aria-labelledby="memeDlgTitle" hidden>
-  <div class="modal-content">
-    <h3 id="memeDlgTitle">Memes (sent to everyone viewing)</h3>
+  <div class="modal-content wide">
+    <h3><span id="memeDlgTitle">Memes</span><small>Sent to everyone viewing the site</small></h3>
     <label for="mSec">Duration: <span id="mSecN">10</span> seconds</label>
     <input id="mSec" type="range" min="3" max="30" value="10">
-    <div class="row">
-      <button class="b" data-fx="freeze">Freeze screen</button>
-      <button class="b" data-fx="bsod">Fake blue screen</button>
-      <button class="b" data-fx="confetti">Confetti</button>
-      <button class="b" data-fx="shake">Earthquake</button>
+    <p class="grp">Class photos</p>
+    <div class="fxgrid">
+      <button class="b" data-fx="rain"><span>🌧️</span>Photo rain</button>
+      <button class="b" data-fx="bounce"><span>📀</span>Bouncing photos</button>
+      <button class="b" data-fx="peek"><span>👀</span>Peekaboo</button>
     </div>
+    <p class="grp">Screen pranks</p>
+    <div class="fxgrid">
+      <button class="b" data-fx="freeze"><span>🧊</span>Freeze screen</button>
+      <button class="b" data-fx="bsod"><span>💀</span>Fake blue screen</button>
+      <button class="b" data-fx="shake"><span>🌋</span>Earthquake</button>
+      <button class="b" data-fx="flip"><span>🙃</span>Upside down</button>
+      <button class="b" data-fx="dizzy"><span>😵‍💫</span>Dizzy</button>
+      <button class="b" data-fx="rainbow"><span>🌈</span>Rainbow</button>
+    </div>
+    <p class="grp">Fun stuff</p>
+    <div class="fxgrid">
+      <button class="b" data-fx="confetti"><span>🎉</span>Confetti</button>
+      <button class="b" data-fx="doodle"><span>✏️</span>Doodle attack</button>
+    </div>
+    <label for="mText">Big message on everyone's screen</label>
+    <div class="msgrow"><input id="mText" type="text" maxlength="80" placeholder="e.g. QUIZ TOMORROW!!"><button class="b" data-fx="msg">📣 Send</button></div>
+    <label class="chk"><input type="checkbox" id="mPrev">Preview on my screen too</label>
     <div class="row"><button class="b red" id="mStop">Stop all now</button><button class="b" id="mClose">Close</button></div>
-    <p style="font-size:.8rem;color:#5b6b80">You won't be affected. Effects end by themselves.</p>
+    <p class="hint">Effects end by themselves. You only see them if "Preview" is ticked.</p>
   </div>
 </div>
 
@@ -499,8 +591,11 @@ $("memeBtn").onclick=()=>showDialog($("memeDlg"));
 $("mClose").onclick=()=>closeDialog($("memeDlg"));
 $("mSec").oninput=e=>$("mSecN").textContent=e.target.value;
 document.querySelectorAll("[data-fx]").forEach(b=>b.onclick=async()=>{
-  const seconds=+$("mSec").value;
-  await set(ref(db,"config/effect"),{type:b.dataset.fx,seconds,ts:Date.now()}).then(()=>toast("Sent to everyone")).catch(e=>toast("Failed: "+e.code));
+  const type=b.dataset.fx, seconds=+$("mSec").value, text=$("mText").value.trim().slice(0,80);
+  if(type==="msg"&&!text){toast("Type a message first");$("mText").focus();return}
+  const d={type,seconds,ts:Date.now()};if(type==="msg")d.text=text;
+  if($("mPrev").checked)runFx(type,seconds*1000,d);
+  await set(ref(db,"config/effect"),d).then(()=>toast("Sent to everyone")).catch(e=>toast("Failed: "+e.code));
 });
 $("mStop").onclick=()=>set(ref(db,"config/effect"),{type:"none",seconds:0,ts:Date.now()}).catch(e=>toast("Failed: "+e.code));
 
@@ -509,18 +604,63 @@ onValue(ref(db,"config/effect"),s=>{
   if(d.type==="none"){stopFx();return}
   if(isAdmin)return;                              // you are never hit by your own memes
   const left=d.seconds*1000-(Date.now()-d.ts);    // ignore old effects
-  if(left>0)runFx(d.type,left);
+  if(left>0)runFx(d.type,left,d);
 });
-function stopFx(){clearTimeout(fxTimer);cancelAnimationFrame(stopFx.raf);const f=$("fx");f.className="";f.textContent="";document.body.classList.remove("shake");document.body.style.overflow=""}
-function runFx(type,ms){
-  stopFx();const f=$("fx");
+const BODY_FX=["shake","flip","dizzy","rainbow"];
+const INK=["#d64545","#1f6feb","#16a34a","#16253b","#e07a00","#9b5de5"];
+const rnd=(a,b)=>a+Math.random()*(b-a);
+function stopFx(){clearTimeout(fxTimer);clearInterval(stopFx.int);cancelAnimationFrame(stopFx.raf);const f=$("fx");f.className="";f.textContent="";document.body.classList.remove(...BODY_FX.map(t=>"fx-"+t));document.body.style.overflow=""}
+function pic(size){
+  const src=photos.length?photos[Math.random()*photos.length|0]:"";
+  const e=document.createElement(src?"img":"span");
+  if(src){e.src=src;e.alt=""}else e.textContent=["📚","✏️","😂","🤓"][Math.random()*4|0];
+  e.className="pic";e.style.width=e.style.height=size+"px";return e;
+}
+function scribble(W,H){
+  const x0=rnd(0,W),y0=rnd(0,H),r=Math.min(W,H)*rnd(.08,.22);let d=`M${x0|0} ${y0|0}`;
+  const kind=Math.random();
+  if(kind<.55){for(let i=0;i<rnd(6,12);i++)d+=` Q${(x0+rnd(-r,r))|0} ${(y0+rnd(-r,r))|0} ${(x0+rnd(-r,r))|0} ${(y0+rnd(-r,r))|0}`}
+  else if(kind<.8){for(let a=0;a<Math.PI*6;a+=.35){const k=r*a/(Math.PI*6);d+=` L${(x0+Math.cos(a)*k)|0} ${(y0+Math.sin(a)*k)|0}`}}
+  else{const k=r/10;d=`M${x0} ${y0+3*k}C${x0-10*k} ${y0-4*k} ${x0-4*k} ${y0-10*k} ${x0} ${y0-4*k}C${x0+4*k} ${y0-10*k} ${x0+10*k} ${y0-4*k} ${x0} ${y0+3*k}`}
+  const p=document.createElementNS("http://www.w3.org/2000/svg","path");
+  p.setAttribute("d",d);p.setAttribute("pathLength","1");p.setAttribute("stroke",INK[Math.random()*INK.length|0]);p.setAttribute("stroke-width",rnd(4,10)|0);return p;
+}
+function runFx(type,ms,d={}){
+  stopFx();const f=$("fx"),small=innerWidth<640;
   if(type==="freeze"){f.className="freeze";document.body.style.overflow="hidden";
     ["keydown","wheel","touchmove"].forEach(ev=>f.addEventListener(ev,e=>e.preventDefault(),{passive:false}))}
   if(type==="bsod"){f.className="bsod";f.innerHTML='<div class="s">:(</div><p>Your class ran into a problem and needs to restart. We\'re just collecting some error info.</p><small>It\'s just a meme. It ends by itself.</small>'}
-  if(type==="shake")document.body.classList.add("shake");
+  if(BODY_FX.includes(type))document.body.classList.add("fx-"+type);
   if(type==="confetti"){f.className="confetti";const c=document.createElement("canvas");f.appendChild(c);c.width=innerWidth;c.height=innerHeight;
-    const x=c.getContext("2d"),P=Array.from({length:160},()=>({x:Math.random()*c.width,y:-Math.random()*c.height,v:2+Math.random()*4,s:5+Math.random()*7,c:COLORS[Math.random()*5|0],r:Math.random()*6}));
+    const x=c.getContext("2d"),P=Array.from({length:small?90:160},()=>({x:Math.random()*c.width,y:-Math.random()*c.height,v:2+Math.random()*4,s:5+Math.random()*7,c:COLORS[Math.random()*5|0],r:Math.random()*6}));
     const step=()=>{x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.y+=p.v;p.r+=.1;if(p.y>c.height)p.y=-10;x.fillStyle=p.c;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillRect(0,0,p.s,p.s*.6);x.restore()});stopFx.raf=requestAnimationFrame(step)};step()}
+  if(type==="rain"){f.className="rain";
+    const drop=()=>{const e=pic(rnd(small?34:46,small?70:96)|0);
+      e.style.left=rnd(-5,95)+"vw";e.style.setProperty("--d",rnd(3,6)+"s");e.style.setProperty("--r",rnd(-540,540)+"deg");e.style.setProperty("--x",rnd(-90,90)+"px");
+      e.addEventListener("animationend",()=>e.remove());f.appendChild(e)};
+    drop();stopFx.int=setInterval(drop,small?280:170)}
+  if(type==="bounce"){f.className="bounce";
+    const B=Array.from({length:small?2:3},()=>{const s=small?110:170,e=pic(s);f.appendChild(e);
+      return{e,s,x:rnd(0,innerWidth-s),y:rnd(0,innerHeight-s),vx:(Math.random()<.5?-1:1)*rnd(2,3.5),vy:(Math.random()<.5?-1:1)*rnd(2,3.5)}});
+    const step=()=>{B.forEach(b=>{const W=innerWidth-b.s,H=innerHeight-b.s;b.x+=b.vx;b.y+=b.vy;let hit=false;
+      if(b.x<0||b.x>W){b.vx*=-1;b.x=Math.max(0,Math.min(W,b.x));hit=true}
+      if(b.y<0||b.y>H){b.vy*=-1;b.y=Math.max(0,Math.min(H,b.y));hit=true}
+      if(hit){b.e.style.borderColor=COLORS[Math.random()*5|0];if(b.e.tagName==="IMG"&&photos.length)b.e.src=photos[Math.random()*photos.length|0]}
+      b.e.style.transform=`translate(${b.x}px,${b.y}px)`});stopFx.raf=requestAnimationFrame(step)};step()}
+  if(type==="peek"){f.className="peek";
+    const peek=()=>{const s=small?100:150,e=pic(s),side=Math.random()*4|0,along=rnd(5,75)+"%";
+      if(side===0){e.style.left=-s+"px";e.style.top=along;e.style.setProperty("--tx",s*.8+"px");e.style.setProperty("--ty","0px");e.style.setProperty("--r","20deg")}
+      if(side===1){e.style.left="100%";e.style.top=along;e.style.setProperty("--tx",-s*.8+"px");e.style.setProperty("--ty","0px");e.style.setProperty("--r","-20deg")}
+      if(side===2){e.style.top=-s+"px";e.style.left=along;e.style.setProperty("--tx","0px");e.style.setProperty("--ty",s*.8+"px");e.style.setProperty("--r","180deg")}
+      if(side===3){e.style.top="100%";e.style.left=along;e.style.setProperty("--tx","0px");e.style.setProperty("--ty",-s*.8+"px");e.style.setProperty("--r","0deg")}
+      e.addEventListener("animationend",()=>e.remove());f.appendChild(e)};
+    peek();stopFx.int=setInterval(peek,small?1100:750)}
+  if(type==="doodle"){f.className="doodle";const W=innerWidth,H=innerHeight,svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("viewBox",`0 0 ${W} ${H}`);f.appendChild(svg);
+    const add=()=>{svg.appendChild(scribble(W,H));if(svg.childNodes.length>60)svg.firstChild.remove()};
+    add();stopFx.int=setInterval(add,320)}
+  if(type==="msg"){f.className="msg";const c=document.createElement("div"),t=document.createElement("p"),s=document.createElement("small");
+    c.className="msgcard";t.textContent=String(d.text||"").slice(0,80);s.textContent="— from your admin";c.append(t,s);f.appendChild(c)}
   fxTimer=setTimeout(stopFx,ms);
 }
 </script>
