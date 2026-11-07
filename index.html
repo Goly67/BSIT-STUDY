@@ -27,7 +27,7 @@ header p{margin:0;color:var(--muted);max-width:52ch}
 main{max-width:1040px;margin:0 auto;padding:12px 20px 80px}
 .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 18px;padding:10px 12px;background:var(--ink);color:#fff;border-radius:10px}
 .bar b{margin-right:auto}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;align-items:start}
 .card{position:relative;background:#fff;border:2px solid var(--ink);border-radius:4px 14px 14px 4px;padding:20px 18px 16px 34px;cursor:pointer;min-height:140px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:4px 4px 0 var(--ink);transition:transform .12s,box-shadow .12s;text-align:left;font:inherit;color:inherit}
 .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:16px;background:var(--c,#ffe45c);border-right:2px solid var(--ink)}
 .card:hover,.card:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);outline:none}
@@ -108,8 +108,23 @@ input[type=range]{padding:0}
 @media (prefers-reduced-motion:reduce){.card{transition:none}}
 @media (prefers-reduced-motion:reduce){#photoBox img{transition:none}}
 input[type=text],input[type=url],input[type=datetime-local]{font-size:16px}
-.due{display:inline-block;margin-top:10px;padding:4px 10px;font-weight:700;font-size:.9rem;background:var(--hl);border:2px solid var(--ink);border-radius:8px}
-.due.late{background:#ffe1e1;border-color:var(--red);color:var(--red)}
+.due{--bg:#fff3a6;margin-top:14px;border:2px solid var(--ink);border-radius:10px 4px 12px 5px/5px 12px 4px 10px;background:var(--bg);box-shadow:3px 3px 0 var(--ink);overflow:hidden;transform:rotate(-.8deg)}
+.due .dh{display:flex;align-items:center;gap:6px;padding:4px 10px;background:var(--ink);color:#fff;font:700 1.05rem/1 'Caveat',cursive;letter-spacing:.08em;text-transform:uppercase}
+.due .dh svg{width:15px;height:15px;flex:none}
+.due .dd{display:flex;align-items:center;gap:10px;padding:9px 10px 10px}
+.due .cal{flex:none;width:50px;text-align:center;background:#fff;border:2px solid var(--ink);border-radius:6px 3px 7px 3px/3px 7px 3px 6px;overflow:hidden;box-shadow:2px 2px 0 var(--ink);line-height:1}
+.due .cal b{display:block;background:var(--red);color:#fff;font:800 .68rem/1 'Bricolage Grotesque',sans-serif;letter-spacing:.1em;padding:3px 0}
+.due .cal i{display:block;font:800 1.55rem/1 'Bricolage Grotesque',sans-serif;font-style:normal;padding:4px 0 5px}
+.due .dw{display:flex;flex-direction:column;gap:3px}
+.due .dw strong{font:700 1.7rem/.95 'Caveat',cursive}
+.due .dw span{align-self:flex-start;font:800 .85rem/1 'Bricolage Grotesque',sans-serif;padding:2px 7px;background:var(--ink);color:#fff;border-radius:99px}
+.due.late .cal b{background:#888}
+.due.soon{--bg:#ffd08a}
+.due.urgent{--bg:#ff9d8a;animation:duePulse 1.6s ease-in-out infinite}
+.due.late{--bg:#e4e4e4;color:#666}
+.due.late .dh{background:#666}
+@keyframes duePulse{0%,100%{box-shadow:3px 3px 0 var(--ink)}50%{box-shadow:3px 3px 0 var(--red),0 0 0 3px rgba(214,69,69,.35)}}
+@media (prefers-reduced-motion:reduce){.due.urgent{animation:none}}
 #viewer{height:100vh;height:100dvh}
 #vbar{padding-top:calc(8px + env(safe-area-inset-top))}
 #toast{bottom:calc(24px + env(safe-area-inset-bottom));max-width:90vw;text-align:center}
@@ -457,8 +472,17 @@ function render(){
     const s=document.createElement("small");s.textContent="Opens inside this site";
     const top=document.createElement("div");top.append(h,s);
     if(it.deadline){
-      const d=document.createElement("div");d.className="due"+(it.deadline<Date.now()?" late":"");
-      d.textContent=(it.deadline<Date.now()?"Deadline passed: ":"Deadline: ")+new Date(it.deadline).toLocaleString([],{dateStyle:"medium",timeStyle:"short"});
+      const d=document.createElement("div");d.className="due";d.dataset.t=it.deadline;
+      d.innerHTML='<div class="dh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2.5h6"/></svg><span>Deadline</span></div><div class="dd"></div>';
+      const dt=new Date(it.deadline),dd=d.querySelector(".dd"),part=o=>dt.toLocaleString([],o);
+      const cal=document.createElement("div");cal.className="cal";
+      const mo=document.createElement("b");mo.textContent=part({month:"short"}).toUpperCase();
+      const dy=document.createElement("i");dy.textContent=dt.getDate();
+      cal.append(mo,dy);
+      const dw=document.createElement("div");dw.className="dw";
+      const wk=document.createElement("strong");wk.textContent=part({weekday:"long"});
+      const tm=document.createElement("span");tm.textContent="by "+part({hour:"numeric",minute:"2-digit"});
+      dw.append(wk,tm);dd.append(cal,dw);
       top.appendChild(d);
     }
     c.appendChild(top);
@@ -480,7 +504,17 @@ function render(){
     }
     g.appendChild(c);
   });
+  tickDue();
 }
+function tickDue(){
+  const now=Date.now();
+  document.querySelectorAll(".due").forEach(d=>{
+    const ms=+d.dataset.t-now;
+    if(ms<=0){d.className="due late";return}
+    d.className="due"+(ms<864e5?" urgent":ms<3*864e5?" soon":"");
+  });
+}
+setInterval(tickDue,1000);
 async function move(from,to){
   const a=[...items];const [x]=a.splice(from,1);a.splice(to,0,x);
   const updates={};a.forEach((it,i)=>updates[`${it.id}/order`]=i);
