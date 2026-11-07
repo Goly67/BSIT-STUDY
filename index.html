@@ -91,7 +91,7 @@ footer button{background:none;border:0;color:var(--muted);text-decoration:underl
 .modal-content{box-sizing:border-box;border:2px solid var(--ink);border-radius:14px;padding:22px;width:min(440px,92vw);max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto;background:#fff;font-family:inherit;color:var(--ink)}
 .modal-content h3{margin:0 0 14px}
 label{display:block;font-size:.85rem;margin:10px 0 4px}
-input[type=text],input[type=url],input[type=range]{width:100%;font:inherit;padding:9px;border:2px solid var(--ink);border-radius:8px}
+input[type=text],input[type=url],input[type=datetime-local],input[type=range]{width:100%;font:inherit;padding:9px;border:2px solid var(--ink);border-radius:8px}
 input[type=range]{padding:0}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;z-index:10001;display:none}
@@ -107,7 +107,9 @@ input[type=range]{padding:0}
 @keyframes shake{0%{transform:translate(4px,2px)}25%{transform:translate(-4px,-3px)}50%{transform:translate(3px,-2px)}75%{transform:translate(-3px,3px)}100%{transform:translate(4px,2px)}}
 @media (prefers-reduced-motion:reduce){.card{transition:none}}
 @media (prefers-reduced-motion:reduce){#photoBox img{transition:none}}
-input[type=text],input[type=url]{font-size:16px}
+input[type=text],input[type=url],input[type=datetime-local]{font-size:16px}
+.due{display:inline-block;margin-top:10px;padding:4px 10px;font-weight:700;font-size:.9rem;background:var(--hl);border:2px solid var(--ink);border-radius:8px}
+.due.late{background:#ffe1e1;border-color:var(--red);color:var(--red)}
 #viewer{height:100vh;height:100dvh}
 #vbar{padding-top:calc(8px + env(safe-area-inset-top))}
 #toast{bottom:calc(24px + env(safe-area-inset-bottom));max-width:90vw;text-align:center}
@@ -176,8 +178,8 @@ input[type=text],input[type=url]{font-size:16px}
 .modal-content h3 small{display:block;margin-top:4px;font:600 .9rem 'Bricolage Grotesque',sans-serif;color:var(--muted)}
 .modal-content h3::before{content:"";position:absolute;top:-13px;left:50%;width:96px;height:24px;margin-left:-48px;background:rgba(143,211,182,.85);border:1px solid rgba(22,37,59,.2);transform:rotate(-3deg);clip-path:polygon(3% 0,97% 6%,100% 50%,96% 100%,2% 94%,0 45%)}
 .modal label{font:700 1.3rem/1 'Caveat',cursive;margin:14px 0 6px}
-.modal input[type=text],.modal input[type=url]{background:rgba(255,255,255,.75);border:2px solid var(--ink);border-radius:10px 3px 12px 4px/4px 12px 3px 10px;padding:10px 12px;font-size:16px;transition:box-shadow .15s,background .15s}
-.modal input[type=text]:focus,.modal input[type=url]:focus{outline:none;background:#fffbe0;box-shadow:3px 3px 0 var(--ink)}
+.modal input[type=text],.modal input[type=url],.modal input[type=datetime-local]{background:rgba(255,255,255,.75);border:2px solid var(--ink);border-radius:10px 3px 12px 4px/4px 12px 3px 10px;padding:10px 12px;font-size:16px;transition:box-shadow .15s,background .15s}
+.modal input[type=text]:focus,.modal input[type=url]:focus,.modal input[type=datetime-local]:focus{outline:none;background:#fffbe0;box-shadow:3px 3px 0 var(--ink)}
 .modal input[type=range]{-webkit-appearance:none;appearance:none;background:none;border:0;height:30px;padding:0;cursor:pointer}
 .modal input[type=range]::-webkit-slider-runnable-track{height:6px;border:2px solid var(--ink);border-radius:8px 3px 8px 3px;background:repeating-linear-gradient(-45deg,var(--ink) 0 1.5px,#fff 1.5px 5px)}
 .modal input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:-12px;border-radius:50% 44% 56% 47%;background:var(--hl);border:2.5px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
@@ -284,6 +286,7 @@ body.fx-flip :is(header,main,#hero,footer,#viewer){transform:rotate(180deg)}
     <h3><span id="cardDlgTitle">Add card</span></h3>
     <label for="cTitle">Name</label><input id="cTitle" type="text" maxlength="80">
     <label for="cUrl">Link</label><input id="cUrl" type="url" placeholder="https://tinyurl.com/...">
+    <label for="cDue">Deadline (date and time, optional)</label><input id="cDue" type="datetime-local">
     <div class="row"><button class="b" id="cSave">Save</button><button class="b" id="cCancel">Cancel</button></div>
   </div>
 </div>
@@ -452,7 +455,13 @@ function render(){
     c.style.setProperty("--c",COLORS[(it.color??i)%COLORS.length]);
     const h=document.createElement("h2");h.textContent=it.title;
     const s=document.createElement("small");s.textContent="Opens inside this site";
-    const top=document.createElement("div");top.append(h,s);c.appendChild(top);
+    const top=document.createElement("div");top.append(h,s);
+    if(it.deadline){
+      const d=document.createElement("div");d.className="due"+(it.deadline<Date.now()?" late":"");
+      d.textContent=(it.deadline<Date.now()?"Deadline passed: ":"Deadline: ")+new Date(it.deadline).toLocaleString([],{dateStyle:"medium",timeStyle:"short"});
+      top.appendChild(d);
+    }
+    c.appendChild(top);
     const open=()=>{viewerAccess.add(it.id);location.hash="#/m/"+it.id;if(location.hash==="#/m/"+it.id)route()};
     c.onclick=open;
     c.onkeydown=e=>{if(e.key==="Enter"&&e.target===c)open()};
@@ -482,16 +491,19 @@ async function seed(){
   const materials={};s.forEach(([title,url],i)=>{materials[push(ref(db,"materials")).key]={title,url,order:i,color:i}});
   update(ref(db,"materials"),materials).catch(e=>toast("Failed: "+e.code));
 }
-function openEdit(it){editing=it;$("cardDlgTitle").textContent=it?"Edit card":"Add card";$("cTitle").value=it?.title||"";$("cUrl").value=it?.url||"";showDialog($("cardDlg"))}
+function openEdit(it){editing=it;$("cardDlgTitle").textContent=it?"Edit card":"Add card";$("cTitle").value=it?.title||"";$("cUrl").value=it?.url||"";
+  const dl=it?.deadline?new Date(it.deadline-new Date(it.deadline).getTimezoneOffset()*60000).toISOString().slice(0,16):"";
+  $("cDue").value=dl;showDialog($("cardDlg"))}
 $("addBtn").onclick=()=>openEdit(null);
 $("cCancel").onclick=()=>closeDialog($("cardDlg"));
 $("cSave").onclick=async()=>{
   const title=$("cTitle").value.trim(),raw=$("cUrl").value.trim();
   if(!title||!raw)return toast("Enter a name and a link");
   const url=fixUrl(raw);
+  const deadline=$("cDue").value?new Date($("cDue").value).getTime():null;
   try{
-    if(editing)await update(ref(db,`materials/${editing.id}`),{title,url});
-    else await set(push(ref(db,"materials")),{title,url,order:items.length,color:items.length});
+    if(editing)await update(ref(db,`materials/${editing.id}`),{title,url,deadline});
+    else{const data={title,url,order:items.length,color:items.length};if(deadline)data.deadline=deadline;await set(push(ref(db,"materials")),data)}
     closeDialog($("cardDlg"));toast("Saved");
   }catch(e){toast("Failed: "+e.code)}
 };
