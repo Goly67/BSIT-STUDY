@@ -79,7 +79,10 @@ footer button{background:none;border:0;color:var(--muted);text-decoration:underl
 #viewer.open{display:flex}
 #vbar{display:flex;gap:10px;align-items:center;padding:8px 12px;background:var(--ink);color:#fff}
 #vbar h3{margin:0;font-size:1rem;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#vbar button.b{border-color:#fff;background:transparent;color:#fff}
+#vbar button.b,#vbar a.b{border-color:#fff;background:transparent;color:#fff}
+#vbar a.b{font-size:.85rem;border:2px solid #fff;border-radius:8px;padding:5px 10px;text-decoration:none;white-space:nowrap}
+#vbar a.b:hover{background:var(--hl);color:var(--ink)}
+#vnote.show{display:block;padding:14px 12px;font-size:clamp(1.3rem,5vw,2.2rem);font-weight:800;text-align:center;line-height:1.15}
 #vnote{display:none;padding:6px 12px;background:var(--hl);font-size:.85rem}
 #frame{flex:1;width:100%;border:0;background:#fff}
 /* admin modals */
@@ -272,7 +275,8 @@ body.fx-flip :is(header,main,#hero,footer,#viewer){transform:rotate(180deg)}
 
 <div id="viewer">
   <div id="vbar"><button class="b" id="backBtn">Back</button><h3 id="vtitle"></h3></div>
-  <iframe id="frame" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation"></iframe>
+  <div id="vnote">Tuploka ang Sign in button para makita ang form</div>
+  <iframe id="frame" allow="autoplay; fullscreen; encrypted-media; picture-in-picture; storage-access" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"></iframe>
 </div>
 
 <div class="modal" id="cardDlg" role="dialog" aria-modal="true" aria-labelledby="cardDlgTitle" hidden>
@@ -342,7 +346,7 @@ const firebaseConfig = {
   measurementId: "G-3Q23SJE0D0"
 };
 const ADMIN_EMAILS = ["forestparty223@gmail.com"];
-document.getElementById("siteTitle").textContent = "MGA TUN ANAN SA BSIT-1A"; // section here
+document.getElementById("siteTitle").textContent = "MGA TUNG ANAN SA BSIT-1A"; // section here
 
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -391,9 +395,19 @@ const ytId=u=>{try{const x=new URL(u);let id="";
 const ytEmbed=id=>`https://www.youtube.com/embed/${id}?controls=0&disablekb=1&modestbranding=1&rel=0&iv_load_policy=3&fs=0&playsinline=1&loop=1&playlist=${id}`;
 const isYt=u=>{try{const x=new URL(u);return x.hostname==="www.youtube.com"&&x.pathname.startsWith("/embed/")}catch{return false}};
 
+// Google Forms: drop extra params (pli, usp, ...) and use the embeddable view
+const formUrl=u=>{try{const x=new URL(u);
+  if(x.hostname!=="docs.google.com")return "";
+  const m=x.pathname.match(/^(\/forms\/(?:u\/\d+\/)?d\/(?:e\/)?[\w-]+)\/(?:viewform|formResponse|edit)?\/?$/)||x.pathname.match(/^(\/forms\/(?:u\/\d+\/)?d\/(?:e\/)?[\w-]+)$/);
+  if(!m)return "";
+  const out=new URL("https://docs.google.com"+m[1].replace(/\/u\/\d+/,"")+"/viewform");
+  out.searchParams.set("embedded","true");
+  return out.href}catch{return ""}};
+const isForm=u=>!!formUrl(u);
 const toast=(t)=>{const e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",2600)};
 const fixUrl=u=>{u=u.trim();if(!/^https?:\/\//i.test(u))u="https://"+u;
 const y=ytId(u);if(y)return ytEmbed(y);
+  const f=formUrl(u);if(f)return f;
   u=u.replace(/(docs\.google\.com\/(?:document|presentation|spreadsheets)\/d\/[^/]+)\/(?:edit|view)[^ ]*/,"$1/preview")
      .replace(/(drive\.google\.com\/file\/d\/[^/]+)\/view[^ ]*/,"$1/preview");return u};
 const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch{return ""}};
@@ -559,9 +573,12 @@ function route(){
   v.dataset.pending=it.id;
   $("vtitle").textContent=it.title;
   document.body.classList.add("locked");
-  (isYt(it.url)?Promise.resolve(ytEmbed(ytId(it.url))):makeTicketedUrl(it)).then(url=>{
+  (isYt(it.url)?Promise.resolve(ytEmbed(ytId(it.url))):isForm(it.url)?Promise.resolve(formUrl(it.url)):makeTicketedUrl(it)).then(url=>{
     if(request!==viewerRequest||location.hash!=="#/m/"+it.id)return;
-    v.dataset.pending="";v.dataset.id=it.id;$("frame").src=url;v.classList.add("open");
+    v.dataset.pending="";v.dataset.id=it.id;
+    const form=formUrl(it.url);
+    $("vnote").classList.toggle("show",!!form);
+    $("frame").src=url;v.classList.add("open");
   }).catch(error=>{
     if(request!==viewerRequest)return;
     v.dataset.pending="";v.classList.remove("open");document.body.classList.remove("locked");
@@ -579,7 +596,7 @@ async function makeTicketedUrl(it){
   if(!response.ok||typeof result.ticket!=="string"){
     throw new Error(result.error||`Ticket service returned HTTP ${response.status}`);
   }
-  const url=new URL(it.url);
+  const url=new URL(fixUrl(it.url));
   url.searchParams.set("bsit_ticket",result.ticket);
   url.searchParams.set("bsit_material",it.id);
   return url.href;
